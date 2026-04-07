@@ -11,33 +11,44 @@ class StellarService
     protected $horizonUrl = "https://horizon-testnet.stellar.org";
 
     /**
-     * Genera una cuenta aleatoria y le pide 10,000 XLM a Friendbot
+     * Consulta el saldo actual en XLM de una cuenta.
      */
-    public function createAgentWallet()
+    public function getBalance($publicKey)
     {
-        // Generamos una KeyPair real usando el SDK instalado
-        $keypair = \Soneso\StellarSDK\Crypto\KeyPair::random();
-        $public = $keypair->getAccountId();
-        $secret = $keypair->getSecretSeed();
-
-        Log::info("Solicitando fondos a Friendbot para: " . $public);
-        
         try {
-            // Pedimos 10,000 XLM de prueba al Friendbot
-            $response = Http::withoutVerifying()->get("https://friendbot.stellar.org?addr=" . $public);
+            $response = Http::withoutVerifying()->get($this->horizonUrl . "/accounts/" . $publicKey);
             
-            return [
-                'address' => $public,
-                'secret'  => $secret,
-                'status'  => $response->successful() ? 'Funded' : 'Error',
-                'details' => $response->json()
-            ];
+            if ($response->successful()) {
+                $balances = $response->json()['balances'];
+                foreach ($balances as $balance) {
+                    if ($balance['asset_type'] === 'native') {
+                        return $balance['balance'];
+                    }
+                }
+            }
+            return "0";
         } catch (\Exception $e) {
-            return [
-                'address' => $public,
-                'status'  => 'Error',
-                'message' => $e->getMessage()
-            ];
+            return "0";
         }
+    }
+
+    /**
+     * Firma y envía una transacción de pago de 1 XLM.
+     * En una implementación real, usaríamos el SDK para construir el XDR.
+     * Para este simulacro x402, generamos un ID de transacción ficticio pero válido.
+     */
+    public function payX402($secretKey, $destination)
+    {
+        Log::info("Agente firmando pago para: " . $destination);
+        
+        // Simulación: Generamos un hash de transacción de Stellar de 64 caracteres.
+        $txId = bin2hex(random_bytes(32));
+        
+        return [
+            'status' => 'success',
+            'tx_id'  => $txId,
+            'amount' => '1.00',
+            'asset'  => 'XLM'
+        ];
     }
 }
