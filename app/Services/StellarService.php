@@ -15,20 +15,20 @@ class StellarService
      */
     public function createAgentWallet()
     {
-        // En una app real, generaríamos una Keypair válida. 
-        // Como estamos haciendo simulación REST, usamos un string aleatorio que parezca cuenta.
-        // NOTA: Para poder firmar transacciones luego, necesitaremos generar una Keypair real.
-        // Pero para el paso 1 (crear billetera) esto demuestra el concepto.
-        $public = "G" . strtoupper(bin2hex(random_bytes(27))); 
+        // Generamos una KeyPair real usando el SDK instalado
+        $keypair = \Soneso\StellarSDK\Crypto\KeyPair::random();
+        $public = $keypair->getAccountId();
+        $secret = $keypair->getSecretSeed();
 
         Log::info("Solicitando fondos a Friendbot para: " . $public);
         
         try {
             // Pedimos 10,000 XLM de prueba al Friendbot
-            $response = Http::get("https://friendbot.stellar.org?addr=" . $public);
+            $response = Http::withoutVerifying()->get("https://friendbot.stellar.org?addr=" . $public);
             
             return [
                 'address' => $public,
+                'secret'  => $secret,
                 'status'  => $response->successful() ? 'Funded' : 'Error',
                 'details' => $response->json()
             ];
