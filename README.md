@@ -1,58 +1,58 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🛡️ Aegis: Sovereign Scout Agent
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**Investigador Autónomo de IA en Stellar con Protocolo x402**
 
-## About Laravel
+Aegis es un agente de IA diseñado para el ecosistema de **Soroban (Stellar Smart Contracts)**. A diferencia de un bot tradicional, Aegis opera bajo una arquitectura de **"Gobernador y Scout"**, permitiendo una autonomía económica real supervisada por humanos.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 La Visión
+El problema actual de los agentes de IA es que se detienen ante los muros de pago. Aegis resuelve esto utilizando el protocolo **x402**, permitiéndole detectar solicitudes de pago HTTP, razonar sobre el valor de la información y ejecutar micropagos en la Testnet de Stellar de forma autónoma.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🏛️ Arquitectura: Governor & Scout
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 1. El Scout (IA Autónoma)
+*   **Identidad**: Posee su propia clave secreta (Segura en el servidor).
+*   **Inteligencia**: Potenciado por **Gemini 1.5 Flash**.
+*   **Misión**: Descubrir tokens en Soroban, analizar sus datos básicos y decidir si invierte en auditorías de seguridad premium.
+*   **Acción Económica**: Firma y envía transacciones XLM para cumplir con los retos de pago del protocolo x402.
 
-## Learning Laravel
+### 2. El Gobernador (Usuario Control)
+*   **Interfaz**: Dashboard premium ciber-industrial.
+*   **Control de Billetera**: Integrado con **Freighter**.
+*   **Responsabilidad**: El Gobernador financia las misiones del Scout y supervisa los logs en tiempo real.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 🛠️ Stack Tecnológico
+*   **Core**: Laravel 11 + PHP 8.3
+*   **Blockchain**: Stellar Horizon REST API + Soneso PHP SDK
+*   **Wallet**: Freighter API (Browser)
+*   **AI**: Google Gemini API
+*   **Payments**: Protocolo x402 (HTTP 402 Challenge)
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 📦 Instalación y Uso
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+1.  **Configurar Entorno**:
+    ```bash
+    cp .env.example .env
+    # Configura tu GEMINI_API_KEY
+    ```
+2.  **Inicializar Billetera del Agente**:
+    ```bash
+    php artisan stellar:setup
+    ```
+    *Esto generará una dirección para tu agente y le pedirá fondos al Friendbot.*
 
-## Agentic Development
+3.  **Ejecutar el Ciclo de Investigación**:
+    ```bash
+    php artisan scout:run
+    ```
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+4.  **Monitor de Misión**:
+    Visita la URL de tu servidor local para ver el Dashboard interactivo y conectar tu billetera **Freighter** para enviar fondos al agente.
 
-```bash
-composer require laravel/boost --dev
+## 🏆 Relevancia para el Hackathon
+Este proyecto demuestra cómo los agentes pueden:
+- Realizar transacciones de **Máquina a Máquina (M2M)**.
+- Navegar por **Paywalls Programáticos** usando x402.
+- Mantener una **Estructura de Gobernanza** donde el usuario financia y la IA ejecuta.
 
-php artisan boost:install
-```
-
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+*Desarrollado para el Stellar Hackathon 2026.*

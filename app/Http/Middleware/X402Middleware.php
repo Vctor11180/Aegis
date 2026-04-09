@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 
 class X402Middleware
 {
@@ -36,13 +37,38 @@ class X402Middleware
             ], 402);
         }
 
-        // Simulación: Validamos que el ID de pago sea "vibrante"
-        // En una implementación real, aquí llamaríamos a Horizon para verificar la TX.
-        Log::info("x402 Verification: Validando pago con ID: " . $paymentProof);
+        // VALIDACIÓN REAL: Consultamos Horizon para verificar si la TX ID es válida
+        Log::info("x402 Verification: Validando pago real con ID: " . $paymentProof);
         
-        // Simplemente dejamos pasar si el ID tiene longitud de una TX de Stellar (~64 chars)
-        if (strlen($paymentProof) < 60) {
-            return response()->json(['error' => 'Invalid Payment Proof'], 402);
+        try {
+            $response = Http::withoutVerifying()->get("https://horizon-testnet.stellar.org/transactions/" . $paymentProof . "/payments");
+            
+            if ($response->successful()) {
+                $payments = $response->json()['_embedded']['records'];
+                $isValid = false;
+
+                foreach ($payments as $payment) {
+                    // Verificamos que sea un pago nativo (XLM), al destino correcto y por el monto correcto
+                    if ($payment['type'] === 'payment' &&
+                        $payment['asset_type'] === 'native' &&
+                        $payment['to'] === $destWallet &&
+                        floatval($payment['amount']) >= floatval($price)) {
+                        $isValid = true;
+                        break;
+                    }
+                }
+
+                if ($isValid) {
+                    Log::info("x402: Pago verificado con éxito en la blockchain.");
+                    return $next($request);
+                }
+            }
+            
+            return response()->json(['error' => 'Payment validation failed on Stellar Network. No matching payment found.'], 402);
+
+        } catch (\Exception $e) {
+            Log::error("x402 Error: " . $e->getMessage());
+            return response()->json(['error' => 'Blockchain verification service unavailable.'], 503);
         }
 
         return $next($request);

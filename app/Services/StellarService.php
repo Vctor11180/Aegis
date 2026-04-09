@@ -4,6 +4,12 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Soneso\StellarSDK\StellarSDK;
+use Soneso\StellarSDK\Crypto\KeyPair;
+use Soneso\StellarSDK\TransactionBuilder;
+use Soneso\StellarSDK\PaymentOperationBuilder;
+use Soneso\StellarSDK\Asset;
+use Soneso\StellarSDK\Network;
 
 class StellarService
 {
@@ -33,22 +39,53 @@ class StellarService
     }
 
     /**
-     * Firma y envía una transacción de pago de 1 XLM.
-     * En una implementación real, usaríamos el SDK para construir el XDR.
-     * Para este simulacro x402, generamos un ID de transacción ficticio pero válido.
+     * Firma y envía una transacción de pago de 1 XLM en la Testnet. (IMPLEMENTACIÓN REAL)
      */
     public function payX402($secretKey, $destination)
     {
-        Log::info("Agente firmando pago para: " . $destination);
+        Log::info("Agente firmando pago real para: " . $destination);
         
-        // Simulación: Generamos un hash de transacción de Stellar de 64 caracteres.
-        $txId = bin2hex(random_bytes(32));
-        
-        return [
-            'status' => 'success',
-            'tx_id'  => $txId,
-            'amount' => '1.00',
-            'asset'  => 'XLM'
-        ];
+        try {
+            $sdk = StellarSDK::getTestNetInstance();
+            
+            // Forzar al SDK a ignorar SSL y establecer la URL base correcta
+            $httpClient = new \GuzzleHttp\Client([
+                'base_uri' => $this->horizonUrl,
+                'verify' => false
+            ]);
+            $sdk->setHttpClient($httpClient);
+
+            $sourceKeyPair = KeyPair::fromSeed($secretKey);
+            $sourceAccount = $sdk->requestAccount($sourceKeyPair->getAccountId());
+
+            // Construir la operación de pago
+            $paymentOp = (new PaymentOperationBuilder($destination, Asset::native(), "1.00"))->build();
+
+            // Construir la transacción
+            $transaction = (new TransactionBuilder($sourceAccount))
+                ->addOperation($paymentOp)
+                ->build();
+
+            // Firmar la transacción
+            $transaction->sign($sourceKeyPair, Network::testnet());
+
+            // Enviar a la red
+            $response = $sdk->submitTransaction($transaction);
+
+            if ($response->isSuccessful()) {
+                return [
+                    'status' => 'success',
+                    'tx_id'  => $response->getHash(),
+                    'amount' => '1.00',
+                    'asset'  => 'XLM'
+                ];
+            }
+
+            return ['status' => 'error', 'message' => 'Fallo al enviar TX a Horizon.'];
+
+        } catch (\Exception $e) {
+            Log::error("Error en pago de Agente: " . $e->getMessage());
+            return ['status' => 'error', 'message' => $e->getMessage()];
+        }
     }
 }

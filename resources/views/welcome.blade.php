@@ -3,250 +3,271 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Aegis | Sovereign Scout Mission Control</title>
+    <title>Aegis Sentinel | Sovereign Blockchain Guardian</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             --bg-deep: #050507;
-            --bg-card: #0d0d12;
             --primary: #f61500;
             --secondary: #ff750f;
             --accent: #00f2ff;
             --text-main: #ededec;
             --text-dim: #a1a09a;
-            --border: #3e3e3a;
-            --stellar: #7d42ff;
+            --border: rgba(255, 255, 255, 0.1);
+            --glass: rgba(13, 13, 18, 0.75);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        
         body {
             background-color: var(--bg-deep);
             color: var(--text-main);
             font-family: 'Outfit', sans-serif;
             overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 50% 0%, rgba(246, 21, 0, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 100% 100%, rgba(125, 66, 255, 0.03) 0%, transparent 40%);
-            min-height: 100vh;
         }
 
-        .dashboard {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-            display: grid;
-            grid-template-columns: 1fr 350px;
-            gap: 2rem;
-            margin-top: 40px;
+        /* --- Animations --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        header {
-            grid-column: 1 / -1;
+        /* --- Hero Section --- */
+        .hero {
+            height: 100vh;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 2rem;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 2rem;
-        }
-
-        .logo-box {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .logo-v {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            display: flex;
-            align-items: center;
+            flex-direction: column;
             justify-content: center;
-            font-weight: 800;
-            color: white;
-            font-size: 1.2rem;
+            align-items: center;
+            text-align: center;
+            padding: 0 10%;
+            position: relative;
+            background: radial-gradient(circle at 50% 50%, rgba(246, 21, 0, 0.1) 0%, transparent 70%);
         }
 
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background-color: var(--accent);
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 8px;
-            box-shadow: 0 0 10px var(--accent);
-            animation: pulse 2s infinite;
+        .mascot-container {
+            width: 400px;
+            height: 400px;
+            margin-bottom: -20px;
+            filter: drop-shadow(0 0 30px rgba(246, 21, 0, 0.2));
+            animation: float 4s ease-in-out infinite;
         }
 
-        @keyframes pulse {
-            0% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.2); }
-            100% { opacity: 1; transform: scale(1); }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
         }
 
-        .card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 1.5rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transition: transform 0.3s ease;
+        .hero h1 {
+            font-size: 5rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, #fff 30%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .card:hover { border-color: #555; }
-
-        .terminal {
-            background-color: #000;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            padding: 1.5rem;
-            border-radius: 12px;
-            color: #ccc;
-            height: 500px;
-            overflow-y: auto;
-            border: 1px solid #222;
-        }
-
-        .terminal-line { margin-bottom: 0.5rem; border-left: 2px solid transparent; padding-left: 0.8rem; }
-        .t-info { color: var(--accent); border-color: var(--accent); }
-        .t-warn { color: var(--secondary); border-color: var(--secondary); }
-        .t-success { color: #00ffa3; border-color: #00ffa3; }
-        .t-gemini { color: #4e9bff; font-weight: bold; }
-
-        .stat-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .stat-item {
-            padding: 1rem;
-            background: #14141a;
-            border-radius: 12px;
-            border: 1px solid #1a1a24;
-        }
-
-        .stat-label { font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; margin-bottom: 0.5rem; }
-        .stat-value { font-size: 1.2rem; font-weight: 700; color: #fff; }
-
-        .btn {
+        .cta-primary {
             background: linear-gradient(90deg, var(--primary), var(--secondary));
             color: white;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 10px;
+            padding: 1.2rem 3.5rem;
+            border-radius: 50px;
             font-weight: 600;
-            cursor: pointer;
-            transition: opacity 0.3s;
+            text-decoration: none;
+            font-size: 1.1rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            width: 100%;
-            margin-top: 1rem;
+            letter-spacing: 2px;
+            box-shadow: 0 10px 40px rgba(246, 21, 0, 0.3);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: none;
         }
 
-        .badge {
-            font-size: 0.7rem;
-            padding: 2px 8px;
-            border-radius: 20px;
-            background: var(--stellar);
-            color: white;
-            font-weight: bold;
+        .cta-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 50px rgba(246, 21, 0, 0.5);
         }
 
-        /* Responsive */
-        @media (max-width: 900px) {
-            .dashboard { grid-template-columns: 1fr; }
+        /* --- Story / Tech Sections --- */
+        .story-section {
+            padding: 10rem 10%;
+            display: flex;
+            align-items: center;
+            gap: 5rem;
+            min-height: 80vh;
         }
+
+        .story-section:nth-child(even) { flex-direction: row-reverse; }
+
+        .story-content { flex: 1; }
+        .story-visual { 
+            flex: 1; 
+            border-radius: 30px; 
+            overflow: hidden; 
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+            transition: transform 0.5s ease;
+        }
+        .story-visual:hover { transform: scale(1.02); border-color: var(--accent); }
+        .story-visual img { width: 100%; display: block; filter: brightness(0.8) contrast(1.1); }
+
+        .story-content h2 { font-size: 3rem; margin-bottom: 1.5rem; color: #fff; }
+        .story-content p { font-size: 1.1rem; line-height: 1.8; color: var(--text-dim); margin-bottom: 2rem; }
+        
+        .pill { 
+            display: inline-block; 
+            padding: 5px 15px; 
+            border-radius: 20px; 
+            background: rgba(0, 242, 255, 0.1); 
+            color: var(--accent); 
+            font-size: 0.8rem; 
+            font-weight: 600; 
+            margin-bottom: 1rem;
+            border: 1px solid rgba(0, 242, 255, 0.2);
+        }
+
+        /* --- Features Cards --- */
+        .features-grid {
+            padding: 5rem 10% 10rem;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .feature-box {
+            background: var(--glass);
+            padding: 3rem 2rem;
+            border-radius: 30px;
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .feature-box:hover { border-color: var(--accent); transform: translateY(-10px); }
+
+        /* --- Mascot SVG --- */
+        .cyber-phoenix { width: 100%; height: 100%; }
+
+        footer {
+            padding: 5rem 10%;
+            background: #000;
+            text-align: center;
+            border-top: 1px solid var(--border);
+        }
+
     </style>
 </head>
 <body>
-    <div class="dashboard">
-        <header>
-            <div class="logo-box">
-                <div class="logo-v">A</div>
-                <div>
-                    <h1 style="font-size: 1.5rem; letter-spacing: -0.5px;">AEGIS <span style="font-weight: 300;">SENTINEL</span></h1>
-                    <p style="font-size: 0.8rem; color: var(--text-dim);">Sovereign Scout Agent v1.0.4</p>
-                </div>
-            </div>
-            <div style="text-align: right;">
-                <p style="font-size: 0.8rem;"><span class="status-dot"></span> AGENTE ACTIVO</p>
-                <p style="font-size: 0.7rem; color: var(--text-dim);">NETWORK: STELLAR TESTNET</p>
-            </div>
-        </header>
 
-        <section class="card">
-            <h2 style="margin-bottom: 1.5rem; font-size: 1.1rem; border-left: 3px solid var(--primary); padding-left: 10px;">MISSION CONTROL LOGS</h2>
-            <div class="terminal" id="scoutTerminal">
-                <div class="terminal-line t-info">[SYSTEM] Inicializando protocolos de seguridad Aegis...</div>
-                <div class="terminal-line t-info">[SYSTEM] Conexión establecida con Horizon.</div>
-                <div class="terminal-line">[AGENT] Mi billetera está lista. Esperando órdenes...</div>
-                <div class="terminal-line t-warn">[INFO] Para ver la actividad real, ejecuta 'php artisan scout:run' en tu terminal Laragon.</div>
-            </div>
-            <button class="btn" onclick="alert('Ejecuta php artisan scout:run en tu terminal para ver la investigación en tiempo real.')">EJECUTAR MISIÓN MANUAL</button>
-        </section>
+    <!-- HERO -->
+    <section class="hero">
+        <div class="mascot-container">
+            <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" class="cyber-phoenix">
+                <defs>
+                    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                        <feGaussianBlur stdDeviation="6" result="blur" />
+                        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                    </filter>
+                    <linearGradient id="fire" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#FFD740" />
+                        <stop offset="100%" stop-color="#f61500" />
+                    </linearGradient>
+                    <linearGradient id="cyber" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#00f2ff" />
+                        <stop offset="100%" stop-color="#0066ff" />
+                    </linearGradient>
+                </defs>
+                <path d="M250,250 L50,150 Q20,250 100,350 L250,250" fill="url(#fire)" opacity="0.8" filter="url(#glow)" />
+                <path d="M250,250 L450,150 Q480,250 400,350 L250,250" fill="url(#fire)" opacity="0.8" filter="url(#glow)" />
+                <path d="M250,150 Q200,250 250,380 Q300,250 250,150" fill="#0d0d12" stroke="url(#fire)" stroke-width="4" />
+                <path d="M250,220 L275,235 L275,265 L250,280 L225,265 L225,235 Z" fill="url(#cyber)" filter="url(#glow)" />
+                <circle cx="250" cy="180" r="4" fill="#00f2ff" filter="url(#glow)" />
+            </svg>
+        </div>
+        <h1 class="reveal">AEGIS SENTINEL</h1>
+        <p class="reveal" style="transition-delay: 0.2s;">El Guardián Autónomo de la Frontera de Stellar</p>
+        <div class="reveal" style="transition-delay: 0.4s; margin-top: 2rem; display: flex; gap: 1rem;">
+            <a href="#vision" class="cta-primary">DESCUBRIR LA MISIÓN</a>
+            <a href="/mission-control" class="cta-primary" style="background: transparent; border: 1px solid var(--accent); color: var(--accent); box-shadow: none;">ACCESO DIRECTO</a>
+        </div>
+    </section>
 
-        <aside style="display: flex; flex-direction: column; gap: 2rem;">
-            <div class="card">
-                <h3 style="font-size: 0.9rem; color: var(--text-dim); margin-bottom: 1rem;">AGENT IDENTITY</h3>
-                <p style="font-size: 0.75rem; word-break: break-all; color: var(--accent); font-family: monospace;">{{ env('STELLAR_PUBLIC_KEY', 'G_SETUP_PENDING') }}</p>
-                
-                <div class="stat-grid">
-                    <div class="stat-item">
-                        <div class="stat-label">PRESUPUESTO</div>
-                        <div class="stat-value">10,000 <span style="font-size: 0.7rem; color: var(--text-dim);">XLM</span></div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">RECOMPENSA</div>
-                        <div class="stat-value">0.00 <span style="font-size: 0.7rem; color: var(--text-dim);">USDC</span></div>
-                    </div>
-                </div>
-            </div>
+    <!-- SECTION 1: GEMINI BRAIN -->
+    <section id="vision" class="story-section">
+        <div class="story-content reveal">
+            <span class="pill">CEREBRO NEURAL</span>
+            <h2>Razonamiento Sin Límites</h2>
+            <p>Aegis no solo sigue reglas; Aegis **comprende**. Gracias al núcleo Gemini 1.5 Flash, nuestro agente analiza el sentimiento de los holders, la lógica de los contratos y las intenciones del mercado antes de realizar cualquier movimiento.</p>
+            <p>Es la fusión perfecta entre la velocidad de la máquina y la prudencia de un auditor experto.</p>
+        </div>
+        <div class="story-visual reveal" style="transition-delay: 0.3s;">
+            <img src="{{ asset('aegis_tech_pillars_brain_1775738788077.png') }}" alt="Neural Link">
+        </div>
+    </section>
 
-            <div class="card">
-                <h3 style="font-size: 0.9rem; color: var(--text-dim); margin-bottom: 1rem;">PROTOCOLO x402</h3>
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
-                    <span style="font-size: 0.85rem;">Status Servidor Premium</span>
-                    <span class="badge">ON</span>
-                </div>
-                <div style="height: 100px; border: 1px dashed #333; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: var(--text-dim);">
-                    Esperando Solicitud 402...
-                </div>
-            </div>
+    <!-- SECTION 2: THE SHIELD -->
+    <section class="story-section">
+        <div class="story-content reveal">
+            <span class="pill">DEFENSA ACTIVA</span>
+            <h2>El Bastión de Aegis</h2>
+            <p>En el caos de la red, Sentinel es tu escudo. Detecta anomalías en milisegundos: desde Honeypots sofisticados hasta brechas de reentrancy en contratos Soroban.</p>
+            <p>Cada vez que el Agente encuentra un riesgo, la red Stellar se vuelve un lugar más seguro para los inversores.</p>
+        </div>
+        <div class="story-visual reveal" style="transition-delay: 0.3s;">
+            <img src="{{ asset('aegis_tech_pillars_shield_1775738821464.png') }}" alt="The Shield">
+        </div>
+    </section>
 
-            <div class="card" style="background: linear-gradient(rgba(13, 13, 18, 0.9), rgba(13, 13, 18, 0.9)), url('https://www.google.com/search?q=cyber+grid+pattern&tbm=isch');">
-                <h3 style="font-size: 0.9rem; color: #4e9bff; margin-bottom: 1rem;">GEMINI 1.5 FLASH</h3>
-                <p style="font-size: 0.8rem; line-height: 1.4;">El razonamiento del agente está impulsado por el motor de IA de Google para un análisis de riesgo autónomo y eficiente.</p>
-            </div>
-        </aside>
-    </div>
+    <!-- SECTION 3: ECONOMY X402 -->
+    <section class="story-section">
+        <div class="story-content reveal">
+            <span class="pill">ECONOMÍA SOBERANA</span>
+            <h2>Soberanía Financiera x402</h2>
+            <p>Por primera vez en la historia, un bot tiene su propia cartera de gastos. A través del Protocolo x402, Aegis paga de forma autónoma por los datos que necesita.</p>
+            <p>No depende de una tarjeta de crédito o una API centralizada; el bot es un cliente legítimo de la red Stellar que intercambia XLM por conocimiento premium.</p>
+        </div>
+        <div class="story-visual reveal" style="transition-delay: 0.3s;">
+            <img src="{{ asset('aegis_tech_pillars_protocol_1775738855327.png') }}" alt="Protocol x402">
+        </div>
+    </section>
 
-    <footer style="margin-top: 4rem; padding-bottom: 2rem; color: #333; font-size: 0.7rem; text-align: center;">
-        AEGIS PROJECT &copy; 2026 | STELLAR HACKATHON SUBMISSION
+    <!-- FINAL CTA -->
+    <section style="padding: 10rem 10%; text-align: center; background: radial-gradient(circle at 50% 0%, rgba(0, 242, 255, 0.05) 0%, transparent 70%);">
+        <h2 class="reveal" style="font-size: 4rem; margin-bottom: 2rem;">¿Listo para tomar el control?</h2>
+        <div class="reveal" style="transition-delay: 0.3s;">
+            <a href="/mission-control" class="cta-primary">ACCEDER A DASHBOARD</a>
+        </div>
+    </section>
+
+    <footer>
+        <div style="margin-bottom: 2rem;">
+            <a href="/" class="logo">AEGIS <span>SENTINEL</span></a>
+        </div>
+        <p style="color: #444;">&copy; 2026 AEGIS PROJECT | DESARROLLADO PARA STELLAR HACKATHON</p>
     </footer>
 
     <script>
-        // Efecto visual de escritura en terminal (Simulación)
-        const terminal = document.getElementById('scoutTerminal');
-        function addLine(text, type = '') {
-            const line = document.createElement('div');
-            line.className = `terminal-line ${type}`;
-            line.innerText = text;
-            terminal.appendChild(line);
-            terminal.scrollTop = terminal.scrollHeight;
-        }
+        // --- Intersection Observer for Scroll Reveal ---
+        const observerOptions = {
+            threshold: 0.1
+        };
 
-        // Simular un evento cada 10 segundos
-        setInterval(() => {
-            if(Math.random() > 0.7) {
-                addLine(`[SCAN] Escaneando Soroban Asset Contract: SAC${Math.floor(Math.random()*1000)}...`, 't-info');
-            }
-        }, 8000);
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     </script>
 </body>
 </html>

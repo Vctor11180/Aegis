@@ -2,9 +2,18 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\ScoutController;
+
 Route::get('/', function () {
-    return view('welcome');
+    return view('welcome'); // Aquí irá la Landing
 });
+
+Route::get('/mission-control', function () {
+    return view('dashboard'); // El tablero actual
+});
+
+// Ruta para ejecutar la misión del agente
+Route::get('/api/agent/run', [ScoutController::class, 'run']);
 
 // Endpoint Premium Protegido por x402
 Route::get('/api/premium/audit/{token_id}', function ($token_id) {
