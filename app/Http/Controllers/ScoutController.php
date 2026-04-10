@@ -8,6 +8,8 @@ use App\Services\SovereignScoutEngine;
 use App\Services\StellarService;
 use Illuminate\Support\Facades\Log;
 
+use App\Models\Audit;
+
 class ScoutController extends Controller
 {
     /**
@@ -83,8 +85,9 @@ class ScoutController extends Controller
         $logs[] = $this->log("[$timestamp] 📊 Holders: {$basicData['total_holders']} | Verificado: " . ($basicData['verified'] ? 'Sí' : 'No'), "");
 
         // 5. Motor de razonamiento Gemini AI
+        $lang = $request->query('lang', 'es');
         $logs[] = $this->log("[$timestamp] 🧠 Activando núcleo Gemini — Analizando vectores de riesgo...", "t-gemini");
-        $decision = $engine->analyzeToken($basicData, $balance);
+        $decision = $engine->analyzeToken($basicData, $balance, $lang);
 
         $riskScore   = $decision['risk_score']   ?? 50;
         $threatLevel = $decision['threat_level'] ?? 'MEDIO';
@@ -100,6 +103,9 @@ class ScoutController extends Controller
         $logs[] = $this->log("[$timestamp] └─────────────────────────────────────────", "t-gemini");
 
         // 6. Ejecutar Protocolo x402 si la IA decide pagar
+        $isPaid = false;
+        $finalTxHash = null;
+
         if (($decision['decision'] ?? 'IGNORAR') === 'PAGAR') {
 
             $govAddr = $request->query('governor')
@@ -111,7 +117,9 @@ class ScoutController extends Controller
             $payment = $stellar->payX402($secretKey, $govAddr);
 
             if ($payment['status'] === 'success') {
+                $isPaid = true;
                 $txId = $payment['tx_id'];
+                $finalTxHash = $txId;
                 $txMeta = [
                     'hash'        => $txId,
                     'hash_short'  => substr($txId, 0, 12) . '...' . substr($txId, -6),
@@ -140,6 +148,18 @@ class ScoutController extends Controller
             $logs[] = $this->log("[$timestamp] 🔒 Agente decide IGNORAR — No se justifica el gasto del presupuesto.", "t-info");
         }
 
+        // --- PERSISTENCIA ---
+        Audit::create([
+            'token_symbol' => $tokenMeta['symbol'],
+            'token_name'   => $tokenMeta['name'],
+            'risk_score'   => $riskScore,
+            'threat_level' => $threatLevel,
+            'reasoning'    => $reasoning,
+            'is_paid'      => $isPaid,
+            'tx_hash'      => $finalTxHash,
+            'amount_xlm'   => $isPaid ? 1.0 : 0.0,
+        ]);
+
         $newBalance = $stellar->getBalance($publicKey);
         $logs[] = $this->log("[$timestamp] 🏁 Ciclo completado — Presupuesto restante: {$newBalance} XLM", "t-info");
 
@@ -152,6 +172,27 @@ class ScoutController extends Controller
             'token_meta'  => $tokenMeta,
             'tx_meta'     => $txMeta,
         ]);
+    }
+
+    /**
+     * Retorna el historial de auditorías para el Dashboard Vault.
+     */
+    public function history()
+    {
+        $history = Audit::orderBy('created_at', 'desc')->take(20)->get()->map(function($a) {
+            return [
+                'id'           => $a->id,
+                'token_symbol' => $a->token_symbol,
+                'risk_score'   => $a->risk_score,
+                'threat_level' => $a->threat_level,
+                'is_paid'      => $a->is_paid,
+                'created_at'   => $a->created_at->toISOString(),
+                'hash_short'   => $a->tx_hash ? substr($a->tx_hash, 0, 8) . '...' : null,
+                'explorer'     => $a->tx_hash ? "https://stellar.expert/explorer/testnet/tx/{$a->tx_hash}" : null,
+            ];
+        });
+
+        return response()->json($history);
     }
 
     private function log(string $text, string $type): array

@@ -5,7 +5,12 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ScoutController;
 
 Route::get('/', function () {
-    return view('welcome'); // Aquí irá la Landing
+    $stats = [
+        'audited' => \App\Models\Audit::count(),
+        'threats' => \App\Models\Audit::where('risk_score', '>', 50)->count(),
+        'xlm'     => \App\Models\Audit::sum('amount_xlm'),
+    ];
+    return view('welcome', compact('stats'));
 });
 
 Route::get('/mission-control', function () {
@@ -14,6 +19,7 @@ Route::get('/mission-control', function () {
 
 // Ruta para ejecutar la misión del agente
 Route::get('/api/agent/run', [ScoutController::class, 'run']);
+Route::get('/api/agent/history', [ScoutController::class, 'history']);
 
 // Endpoint Premium Protegido por x402
 Route::get('/api/premium/audit/{token_id}', function ($token_id) {

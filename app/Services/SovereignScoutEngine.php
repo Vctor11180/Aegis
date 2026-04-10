@@ -19,42 +19,44 @@ class SovereignScoutEngine
      * Analiza un token usando Gemini en modo JSON estricto.
      * Retorna decisión, razonamiento, confianza y risk_score (0-100).
      */
-    public function analyzeToken($tokenData, $availableBudget)
+    public function analyzeToken($tokenData, $availableBudget, $lang = 'es')
     {
         if (empty($this->apiKey) || $this->apiKey === 'YOUR_GEMINI_API_KEY_HERE') {
             return $this->fallbackDecision($tokenData, "API Key no configurada.");
         }
 
-        $verifiedLabel = $tokenData['verified'] ? 'Sí (verificado por la red)' : 'No (no verificado, mayor riesgo)';
+        $langMap = [
+            'es' => 'Español',
+            'en' => 'English',
+            'pt' => 'Português'
+        ];
+        $targetLang = $langMap[$lang] ?? 'Español';
 
-        $prompt = "Eres 'Aegis', un Agente Soberano de Seguridad Blockchain operando autónomamente en la red Stellar.
-Tu misión es auditar activos Soroban y decidir si vale la pena invertir tu presupuesto en una auditoría premium.
-Eres metódico, preciso y piensas en tres dimensiones:
-  1. DISTRIBUCIÓN: ¿Los holders están concentrados? ¿Es una ballena o comunidad?
-  2. CONTRATO: ¿El símbolo/nombre tiene señales de phishing o suplantación?
-  3. MERCADO: ¿La actividad de holders justifica profundizar el análisis?
+        $verifiedLabel = $tokenData['verified'] ? 'Sí (verificado)' : 'No (no verificado)';
 
-CONTEXTO DE MISIÓN:
-- Presupuesto disponible: {$availableBudget} XLM
-- Costo de auditoría premium: 1 XLM (Protocolo x402)
+        $prompt = "You are 'Aegis', a Sovereign Blockchain Security Agent operating on Stellar.
+Audit the asset and decide if a premium audit (x402) is worth the 1 XLM cost.
 
-DATOS DEL ACTIVO A EVALUAR:
-- Símbolo: {$tokenData['symbol']}
-- Nombre: {$tokenData['name']}
+ASSET DATA:
+- Symbol: {$tokenData['symbol']}
+- Name: {$tokenData['name']}
 - Total Holders: {$tokenData['total_holders']}
-- Estado de verificación: {$verifiedLabel}
-- Resumen: {$tokenData['summary']}
+- Verified: {$verifiedLabel}
 
-Responde EXACTAMENTE en JSON con esta estructura (sin markdown, solo JSON puro):
+MISSION CONTEXT:
+- Available Budget: {$availableBudget} XLM
+- x402 Cost: 1 XLM
+
+IMPORTANT: You must respond in the following language: {$targetLang}.
+Return EXACTLY a JSON object:
 {
-  \"decision\": \"PAGAR\" o \"IGNORAR\",
-  \"reasoning\": \"Explicación de 2-3 oraciones en español como auditor experto\",
-  \"confidence\": 0.0,
-  \"risk_score\": 0,
-  \"threat_level\": \"BAJO\" o \"MEDIO\" o \"ALTO\" o \"CRITICO\"
+  \"decision\": \"PAGAR\" or \"IGNORAR\",
+  \"reasoning\": \"Expert auditor explanation (2-3 sentences)\",
+  \"confidence\": 0.0-1.0,
+  \"risk_score\": 0-100,
+  \"threat_level\": \"BAJO\", \"MEDIO\", \"ALTO\" or \"CRITICO\"
 }
-
-Donde risk_score va de 0 (seguro) a 100 (extremadamente peligroso).";
+Only JSON, no markdown.";
 
         try {
             $response = Http::withoutVerifying()

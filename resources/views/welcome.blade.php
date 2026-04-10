@@ -12,6 +12,9 @@
     <style>
         :root {
             --bg:        #020204;
+            --bg-1:      #07070d;
+            --bg-2:      #0d0d18;
+            --bg-3:      #111120;
             --primary:   #f61500;
             --secondary: #ff750f;
             --accent:    #00f2ff;
@@ -22,6 +25,27 @@
             --text-2:    #a8a8a4;
             --text-3:    #555560;
             --border:    rgba(255,255,255,0.07);
+            --border-h:  rgba(255,255,255,0.14);
+            --card-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        [data-theme="light"] {
+            --bg:        #f1f5f9;
+            --bg-1:      #ffffff;
+            --bg-2:      #f8fafc;
+            --bg-3:      #e2e8f0;
+            --primary:   #ef4444;
+            --secondary: #f97316;
+            --accent:    #0ea5e9;
+            --green:     #22c55e;
+            --violet:    #8b5cf6;
+            --gold:      #f59e0b;
+            --text-1:    #1e293b;
+            --text-2:    #475569;
+            --text-3:    #94a3b8;
+            --border:    #e2e8f0;
+            --border-h:  #cbd5e1;
+            --card-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
         }
 
         *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
@@ -58,7 +82,8 @@
             align-items: center;
             justify-content: space-between;
             backdrop-filter: blur(20px);
-            background: rgba(2,2,4,0.7);
+            background: var(--bg-1);
+            opacity: 0.95;
             border-bottom: 1px solid var(--border);
             z-index: 100;
             transition: background 0.3s;
@@ -94,6 +119,32 @@
             transition: all 0.2s;
         }
         .btn-nav:hover { opacity: 0.85; transform: translateY(-1px); }
+
+        .top-btn {
+            background: var(--bg-3);
+            border: 1px solid var(--border);
+            color: var(--text-2);
+            width: 32px; height: 32px;
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+        .top-btn:hover { background: var(--bg-2); color: var(--text-1); border-color: var(--border-h); }
+
+        .lang-select {
+            background: var(--bg-3);
+            border: 1px solid var(--border);
+            color: var(--text-2);
+            font-size: 0.65rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            outline: none;
+            cursor: pointer;
+        }
 
         /* ── HERO ─────────────────────────────────────────── */
         .hero {
@@ -157,7 +208,7 @@
             line-height: 0.95;
             letter-spacing: -2px;
             margin-bottom: 1.25rem;
-            background: linear-gradient(135deg, #fff 0%, var(--text-1) 40%, var(--accent) 100%);
+            background: linear-gradient(135deg, var(--text-1) 0%, var(--text-1) 40%, var(--accent) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -288,7 +339,7 @@
             font-weight: 800;
             line-height: 1.1;
             margin-bottom: 1.25rem;
-            color: #fff;
+            color: var(--text-1);
         }
 
         .pillar-content p {
@@ -345,13 +396,14 @@
         }
 
         .feat-card {
-            background: #07070d;
+            background: var(--bg-1);
             border: 1px solid var(--border);
             border-radius: 20px;
             padding: 2rem;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            box-shadow: var(--card-shadow);
         }
 
         .feat-card::before {
@@ -370,7 +422,7 @@
         .feat-card:hover::before { opacity: 1; }
 
         .feat-icon { font-size: 2rem; margin-bottom: 1rem; }
-        .feat-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .feat-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-1); }
         .feat-desc  { font-size: 0.9rem; color: var(--text-2); line-height: 1.6; }
 
         /* ── TERMINAL DEMO ────────────────────────────────── */
@@ -424,7 +476,7 @@
             font-size: clamp(2.5rem, 5vw, 4.5rem);
             font-weight: 800;
             margin-bottom: 1rem;
-            background: linear-gradient(135deg, #fff, var(--accent));
+            background: linear-gradient(135deg, var(--text-1), var(--accent));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -472,10 +524,18 @@
         AEGIS <span>SENTINEL</span>
     </a>
     <div class="nav-links">
-        <a href="#pilares">Tecnología</a>
-        <a href="#demo">Demo</a>
-        <a href="#funciones">Funciones</a>
-        <a href="/mission-control" class="btn-nav">Mission Control</a>
+    <div class="nav-links">
+        <a href="#pilares" data-t="nav_tech">Tecnología</a>
+        <a href="#demo" data-t="nav_demo">Demo</a>
+        <a href="#funciones" data-t="nav_features">Funciones</a>
+        <div style="width:1px; height:20px; background:var(--border); margin:0 4px;"></div>
+        <select class="lang-select" id="langSelect">
+            <option value="es">ES</option>
+            <option value="en">EN</option>
+            <option value="pt">PT</option>
+        </select>
+        <button class="top-btn" id="themeToggle" title="Toggle Theme">🌓</button>
+        <a href="/mission-control" class="btn-nav" data-t="nav_dashboard">Mission Control</a>
     </div>
 </nav>
 
@@ -581,32 +641,32 @@
         </svg>
     </div>
 
-    <div class="hero-eyebrow">Sovereign Blockchain Guardian · Stellar Network</div>
+    <div class="hero-eyebrow" data-t="hero_eyebrow">Sovereign Blockchain Guardian · Stellar Network</div>
     <h1 class="hero-title">AEGIS<br>SENTINEL</h1>
-    <p class="hero-sub">El primer agente de seguridad autónomo de la red Stellar. Impulsado por Gemini AI. Soberano con el Protocolo x402.</p>
+    <p class="hero-sub" data-t="hero_sub">El primer agente de seguridad autónomo de la red Stellar. Impulsado por Gemini AI. Soberano con el Protocolo x402.</p>
 
     <div class="hero-cta">
-        <a href="#pilares" class="cta-main">Descubrir la Misión</a>
-        <a href="/mission-control" class="cta-ghost">⚡ Acceso Directo</a>
+        <a href="#pilares" class="cta-main" data-t="btn_discover">Descubrir la Misión</a>
+        <a href="/mission-control" class="cta-ghost" data-t="btn_access">⚡ Acceso Directo</a>
     </div>
 
     <!-- Stats Bar -->
     <div class="stats-bar">
         <div class="stat-item">
-            <div class="stat-num" data-target="847">0</div>
-            <div class="stat-desc">Tokens Auditados</div>
+            <div class="stat-num" data-target="{{ $stats['audited'] }}">0</div>
+            <div class="stat-desc" data-t="stat_audited">Tokens Auditados</div>
         </div>
         <div class="stat-item">
-            <div class="stat-num" data-target="32">0</div>
-            <div class="stat-desc">Amenazas Bloqueadas</div>
+            <div class="stat-num" data-target="{{ $stats['threats'] }}">0</div>
+            <div class="stat-desc" data-t="stat_threats">Amenazas Bloqueadas</div>
         </div>
         <div class="stat-item">
             <div class="stat-num" data-target="99">0</div>
-            <div class="stat-desc">% Uptime</div>
+            <div class="stat-desc" data-t="stat_uptime">% Uptime</div>
         </div>
         <div class="stat-item">
-            <div class="stat-num" data-target="1506">0</div>
-            <div class="stat-desc">XLM Gestionados</div>
+            <div class="stat-num" data-target="{{ round($stats['xlm']) }}">0</div>
+            <div class="stat-desc" data-t="stat_managed">XLM Gestionados</div>
         </div>
     </div>
 
@@ -622,15 +682,15 @@
     <!-- Pilar 1: Gemini AI -->
     <div class="pillar section">
         <div class="pillar-content reveal from-left">
-            <div class="section-eyebrow">01 / Cerebro Neural</div>
-            <h2>Razonamiento Autónomo con Gemini</h2>
-            <p>Aegis no ejecuta reglas predefinidas. <strong style="color:#fff">Piensa.</strong> El núcleo Gemini 1.5 Flash analiza simultáneamente la distribución de holders, la semántica del contrato y las señales de mercado para emitir un <em>Risk Score</em> de 0 a 100 en milisegundos.</p>
-            <p>Cada decisión viene con razonamiento explícito: el agente justifica por qué actuará o ignorará un activo.</p>
+            <div class="section-eyebrow" data-t="pillar1_eyebrow">01 / Cerebro Neural</div>
+            <h2 data-t="pillar1_title">Razonamiento Autónomo con Gemini</h2>
+            <p data-t="pillar1_desc1">Aegis no ejecuta reglas predefinidas. <strong style="color:var(--text-1)">Piensa.</strong> El núcleo Gemini 1.5 Flash analiza simultáneamente la distribución de holders, la semántica del contrato y las señales de mercado para emitir un <em>Risk Score</em> de 0 a 100 en milisegundos.</p>
+            <p data-t="pillar1_desc2">Cada decisión viene con razonamiento explícito: el agente justifica por qué actuará o ignorará un activo.</p>
             <div class="pillar-tags">
                 <span class="tag">Gemini 1.5 Flash</span>
-                <span class="tag">JSON Mode Estricto</span>
-                <span class="tag green">Risk Score 0-100</span>
-                <span class="tag">Análisis Semántico</span>
+                <span class="tag" data-t="p_tag_json">JSON Mode Estricto</span>
+                <span class="tag green" data-t="p_tag_risk">Risk Score 0-100</span>
+                <span class="tag" data-t="p_tag_semantic">Análisis Semántico</span>
             </div>
         </div>
         <div class="pillar-visual reveal from-right">
@@ -643,15 +703,15 @@
     <!-- Pilar 2: Shield -->
     <div class="pillar section">
         <div class="pillar-content reveal from-right">
-            <div class="section-eyebrow">02 / Defensa Activa</div>
-            <h2>El Bastión Soroban de Aegis</h2>
-            <p>En el caos de la frontera blockchain, Aegis actúa como un escudo inteligente. Detecta honeypots, patrones de reentrancy, concentración anómala de wallets y tokens de suplantación antes de que cualquier inversor sea afectado.</p>
-            <p>Cada ciclo de patrulla deja la red Stellar más segura que antes. El agente no descansa.</p>
+            <div class="section-eyebrow" data-t="pillar2_eyebrow">02 / Defensa Activa</div>
+            <h2 data-t="pillar2_title">El Bastión Soroban de Aegis</h2>
+            <p data-t="pillar2_desc1">En el caos de la frontera blockchain, Aegis actúa como un escudo inteligente. Detecta honeypots, patrones de reentrancy, concentración anómala de wallets y tokens de suplantación antes de que cualquier inversor sea afectado.</p>
+            <p data-t="pillar2_desc2">Cada ciclo de patrulla deja la red Stellar más segura que antes. El agente no descansa.</p>
             <div class="pillar-tags">
-                <span class="tag fire">Anti-Honeypot</span>
-                <span class="tag fire">Reentrancy Guard</span>
-                <span class="tag">Análisis Soroban</span>
-                <span class="tag gold">Auditoría 24/7</span>
+                <span class="tag fire" data-t="p_tag_anti">Anti-Honeypot</span>
+                <span class="tag fire" data-t="p_tag_reen">Reentrancy Guard</span>
+                <span class="tag" data-t="p_tag_soroban">Análisis Soroban</span>
+                <span class="tag gold" data-t="p_tag_audit24">Auditoría 24/7</span>
             </div>
         </div>
         <div class="pillar-visual reveal from-left">
@@ -664,15 +724,15 @@
     <!-- Pilar 3: x402 -->
     <div class="pillar section">
         <div class="pillar-content reveal from-left">
-            <div class="section-eyebrow">03 / Soberanía Financiera</div>
-            <h2>Protocolo x402: El Pago Máquina‑a‑Máquina</h2>
-            <p>Por primera vez, un agente de IA tiene su <strong style="color:#fff">propia cartera soberana</strong>. Cuando Aegis decide que vale la pena profundizar, paga de forma autónoma 1 XLM al servidor de datos premium mediante el Protocolo x402 on-chain en Stellar Testnet.</p>
-            <p>Sin intermediarios. Sin tarjetas de crédito. Solo inteligencia que paga por conocimiento.</p>
+            <div class="section-eyebrow" data-t="pillar3_eyebrow">03 / Soberanía Financiera</div>
+            <h2 data-t="pillar3_title">Protocolo x402: El Pago Máquina‑a‑Máquina</h2>
+            <p data-t="pillar3_desc1">Por primera vez, un agente de IA tiene su <strong style="color:var(--text-1)">propia cartera soberana</strong>. Cuando Aegis decide que vale la pena profundizar, paga de forma autónoma 1 XLM al servidor de datos premium mediante el Protocolo x402 on-chain en Stellar Testnet.</p>
+            <p data-t="pillar3_desc2">Sin intermediarios. Sin tarjetas de crédito. Solo inteligencia que paga por conocimiento.</p>
             <div class="pillar-tags">
                 <span class="tag gold">Protocolo x402</span>
                 <span class="tag green">On-Chain XLM</span>
                 <span class="tag">Stellar Testnet</span>
-                <span class="tag fire">Agente Soberano</span>
+                <span class="tag fire" data-t="p_tag_sov">Agente Soberano</span>
             </div>
         </div>
         <div class="pillar-visual reveal from-right">
@@ -687,9 +747,9 @@
 <section class="section" id="demo" style="background: radial-gradient(circle at 50% 50%, rgba(125,66,255,0.04) 0%, transparent 70%);">
     <div style="max-width:860px;margin:0 auto;">
         <div style="text-align:center;margin-bottom:3rem;">
-            <div class="section-eyebrow reveal">En Acción</div>
-            <h2 class="reveal" style="font-size:2.5rem;font-weight:800;margin-bottom:1rem;">Así Piensa Aegis</h2>
-            <p class="reveal" style="color:var(--text-2);">Un ciclo de misión real: desde el escaneo hasta el pago on-chain.</p>
+            <div class="section-eyebrow reveal" data-t="demo_eyebrow">En Acción</div>
+            <h2 class="reveal" style="font-size:2.5rem;font-weight:800;margin-bottom:1rem;color:var(--text-1);" data-t="demo_title">Así Piensa Aegis</h2>
+            <p class="reveal" style="color:var(--text-2);" data-t="demo_sub">Un ciclo de misión real: desde el escaneo hasta el pago on-chain.</p>
         </div>
         <div class="demo-terminal reveal">
             <div class="dterm-header">
@@ -697,7 +757,7 @@
                 <span class="dterm-title">aegis-sentinel · mission-control</span>
             </div>
             <div class="dterm-body" id="demoTerminal">
-                <div class="dl dl-d"># Iniciando ciclo de patrulla...</div>
+                <div class="dl dl-d" data-t="demo_line1"># Iniciando ciclo de patrulla...</div>
             </div>
         </div>
     </div>
@@ -706,49 +766,49 @@
 <!-- ═══ FEATURES GRID ══════════════════════════════════════════════ -->
 <section class="section" id="funciones">
     <div style="text-align:center;margin-bottom:3rem;">
-        <div class="section-eyebrow reveal">Capacidades</div>
-        <h2 class="reveal" style="font-size:2.5rem;font-weight:800;margin-bottom:1rem;">Todo lo que hace Aegis</h2>
+        <div class="section-eyebrow reveal" data-t="cap_eyebrow">Capacidades</div>
+        <h2 class="reveal" style="font-size:2.5rem;font-weight:800;margin-bottom:1rem;color:var(--text-1);" data-t="cap_title">Todo lo que hace Aegis</h2>
     </div>
     <div class="cards-grid">
         <div class="feat-card reveal" style="--glow:rgba(0,242,255,0.06)">
             <div class="feat-icon">🧠</div>
-            <div class="feat-title">IA Autónoma</div>
-            <div class="feat-desc">Gemini 1.5 Flash analiza cada token con razonamiento estructurado y un Risk Score preciso.</div>
+            <div class="feat-title" data-t="feat1_title">IA Autónoma</div>
+            <div class="feat-desc" data-t="feat1_desc">Gemini 1.5 Flash analiza cada token con razonamiento estructurado y un Risk Score preciso.</div>
         </div>
         <div class="feat-card reveal" style="--glow:rgba(246,21,0,0.06)">
             <div class="feat-icon">⚡</div>
-            <div class="feat-title">Protocolo x402</div>
-            <div class="feat-desc">El agente paga autónomamente por datos premium on-chain en Stellar. Sin humanos en el loop.</div>
+            <div class="feat-title" data-t="feat2_title">Protocolo x402</div>
+            <div class="feat-desc" data-t="feat2_desc">El agente paga autónomamente por datos premium on-chain en Stellar. Sin humanos en el loop.</div>
         </div>
         <div class="feat-card reveal" style="--glow:rgba(0,255,163,0.06)">
             <div class="feat-icon">🛡️</div>
-            <div class="feat-title">Auditoría Soroban</div>
-            <div class="feat-desc">Detección de honeypots, reentrancy y concentración de wallets en contratos de la red Stellar.</div>
+            <div class="feat-title" data-t="feat3_title">Auditoría Soroban</div>
+            <div class="feat-desc" data-t="feat3_desc">Detección de honeypots, reentrancy y concentración de wallets en contratos de la red Stellar.</div>
         </div>
         <div class="feat-card reveal" style="--glow:rgba(255,215,64,0.06)">
             <div class="feat-icon">📊</div>
-            <div class="feat-title">Risk Gauge en Vivo</div>
-            <div class="feat-desc">Medidor visual que refleja en tiempo real el nivel de amenaza calculado por la IA.</div>
+            <div class="feat-title" data-t="feat4_title">Risk Gauge en Vivo</div>
+            <div class="feat-desc" data-t="feat4_desc">Medidor visual que refleja en tiempo real el nivel de amenaza calculado por la IA.</div>
         </div>
         <div class="feat-card reveal" style="--glow:rgba(125,66,255,0.06)">
             <div class="feat-icon">🔗</div>
-            <div class="feat-title">TX On-Chain</div>
-            <div class="feat-desc">Cada pago queda registrado en Stellar con hash verificable en StellarExpert.</div>
+            <div class="feat-title" data-t="feat5_title">TX On-Chain</div>
+            <div class="feat-desc" data-t="feat5_desc">Cada pago queda registrado en Stellar con hash verificable en StellarExpert.</div>
         </div>
         <div class="feat-card reveal" style="--glow:rgba(0,242,255,0.06)">
             <div class="feat-icon">🤖</div>
-            <div class="feat-title">Modo Autónomo</div>
-            <div class="feat-desc">El agente opera en ciclos continuos, gestionando su presupuesto sin intervención humana.</div>
+            <div class="feat-title" data-t="feat6_title">Modo Autónomo</div>
+            <div class="feat-desc" data-t="feat6_desc">El agente opera en ciclos continuos, gestionando su presupuesto sin intervención humana.</div>
         </div>
     </div>
 </section>
 
 <!-- ═══ FINAL CTA ══════════════════════════════════════════════════ -->
 <section class="final-cta">
-    <h2 class="reveal">El Centinela no duerme.<br>¿Y tú?</h2>
-    <p class="reveal">Accede al Mission Control y observa a Aegis patrullar la red Stellar en tiempo real.</p>
+    <h2 class="reveal" data-t="final_title">El Centinela no duerme.<br>¿Y tú?</h2>
+    <p class="reveal" data-t="final_sub">Accede al Mission Control y observa a Aegis patrullar la red Stellar en tiempo real.</p>
     <div class="reveal">
-        <a href="/mission-control" class="cta-main" style="font-size:1.1rem;padding:1.2rem 3.5rem;">
+        <a href="/mission-control" class="cta-main" style="font-size:1.1rem;padding:1.2rem 3.5rem;" data-t="final_btn">
             ⚡ Abrir Mission Control
         </a>
     </div>
@@ -760,11 +820,145 @@
         <div class="logo-gem" style="width:22px;height:22px;"></div>
         AEGIS <span>SENTINEL</span>
     </a>
-    <p>Construido para Stellar Hackathon 2026 · Gemini AI × x402 × Soroban</p>
+    <p data-t="footer_built">Construido para Stellar Hackathon 2026 · Gemini AI × x402 × Soroban</p>
     <p>&copy; 2026 Aegis Project</p>
 </footer>
 
 <script>
+// ── i18n System ──────────────────────────────────────────────────
+const i18n = {
+    es: {
+        nav_tech: "Tecnología", nav_demo: "Demo", nav_features: "Funciones", nav_dashboard: "Mission Control",
+        hero_eyebrow: "Sovereign Blockchain Guardian · Stellar Network",
+        hero_sub: "El primer agente de seguridad autónomo de la red Stellar. Impulsado por Gemini AI. Soberano con el Protocolo x402.",
+        btn_discover: "Descubrir la Misión", btn_access: "⚡ Acceso Directo",
+        stat_audited: "Tokens Auditados", stat_threats: "Amenazas Bloqueadas", stat_uptime: "% Uptime", stat_managed: "XLM Gestionados",
+        pillar1_eyebrow: "01 / Cerebro Neural", pillar1_title: "Razonamiento Autónomo con Gemini",
+        pillar1_desc1: "Aegis no ejecuta reglas predefinidas. <strong style='color:var(--text-1)'>Piensa.</strong> El núcleo Gemini 1.5 Flash analiza simultáneamente la distribución de holders, la semántica del contrato y las señales de mercado.",
+        pillar1_desc2: "Cada decisión viene con razonamiento explícito: el agente justifica por qué actuará.",
+        p_tag_json: "JSON Mode Estricto", p_tag_risk: "Risk Score 0-100", p_tag_semantic: "Análisis Semántico",
+        pillar2_eyebrow: "02 / Defensa Activa", pillar2_title: "El Bastión Soroban de Aegis",
+        pillar2_desc1: "Aegis actúa como un escudo inteligente. Detecta honeypots, reentrancy y concentración anómala de wallets antes de que cualquier inversor sea afectado.",
+        pillar2_desc2: "Cada ciclo de patrulla deja la red Stellar más segura.",
+        p_tag_anti: "Anti-Honeypot", p_tag_reen: "Reentrancy Guard", p_tag_soroban: "Análisis Soroban", p_tag_audit24: "Auditoría 24/7",
+        pillar3_eyebrow: "03 / Soberanía Financiera", pillar3_title: "Protocolo x402: Pago Máquina‑a‑Máquina",
+        pillar3_desc1: "Un agente de IA con su <strong style='color:var(--text-1)'>propia cartera soberana</strong>. Paga de forma autónoma 1 XLM por datos premium mediante x402.",
+        pillar3_desc2: "Sin intermediarios. Solo inteligencia que paga por conocimiento.",
+        p_tag_sov: "Agente Soberano",
+        demo_eyebrow: "En Acción", demo_title: "Así Piensa Aegis", demo_sub: "Un ciclo de misión real: desde el escaneo hasta el pago on-chain.",
+        demo_line1: "# Iniciando ciclo de patrulla...",
+        cap_eyebrow: "Capacidades", cap_title: "Todo lo que hace Aegis",
+        feat1_title: "IA Autónoma", feat1_desc: "Gemini 1.5 Flash analiza cada token con razonamiento estructurado.",
+        feat2_title: "Protocolo x402", feat2_desc: "El agente paga autónomamente por datos premium on-chain.",
+        feat3_title: "Auditoría Soroban", feat3_desc: "Detección de honeypots y reentrancy en la red Stellar.",
+        feat4_title: "Risk Gauge en Vivo", feat4_desc: "Medidor visual que refleja el nivel de amenaza en tiempo real.",
+        feat5_title: "TX On-Chain", feat5_desc: "Cada pago queda registrado con hash verificable en StellarExpert.",
+        feat6_title: "Modo Autónomo", feat6_desc: "El agente opera en ciclos continuos sin intervención humana.",
+        final_title: "El Centinela no duerme. ¿Y tú?",
+        final_sub: "Accede al Mission Control y observa a Aegis patrullar la red Stellar en tiempo real.",
+        final_btn: "⚡ Abrir Mission Control",
+        footer_built: "Construido para Stellar Hackathon 2026 · Gemini AI × x402 × Soroban"
+    },
+    en: {
+        nav_tech: "Technology", nav_demo: "Demo", nav_features: "Features", nav_dashboard: "Mission Control",
+        hero_eyebrow: "Sovereign Blockchain Guardian · Stellar Network",
+        hero_sub: "The first autonomous security agent on the Stellar network. Powered by Gemini AI. Sovereign with the x402 Protocol.",
+        btn_discover: "Discover the Mission", btn_access: "⚡ Direct Access",
+        stat_audited: "Tokens Audited", stat_threats: "Threats Blocked", stat_uptime: "% Uptime", stat_managed: "XLM Managed",
+        pillar1_eyebrow: "01 / Neural Brain", pillar1_title: "Autonomous Reasoning with Gemini",
+        pillar1_desc1: "Aegis doesn't run predefined rules. <strong style='color:var(--text-1)'>It thinks.</strong> The Gemini 1.5 Flash core analyzes holder distribution, contract semantics, and market signals.",
+        pillar1_desc2: "Every decision comes with explicit reasoning: the agent justifies why it acts.",
+        p_tag_json: "Strict JSON Mode", p_tag_risk: "Risk Score 0-100", p_tag_semantic: "Semantic Analysis",
+        pillar2_eyebrow: "02 / Active Defense", pillar2_title: "Aegis Soroban Bastion",
+        pillar2_desc1: "Aegis acts as an intelligent shield. It detects honeypots, reentrancy, and anomalous wallet concentration before any investor is affected.",
+        pillar2_desc2: "Each patrol cycle leaves the Stellar network safer.",
+        p_tag_anti: "Anti-Honeypot", p_tag_reen: "Reentrancy Guard", p_tag_soroban: "Soroban Analysis", p_tag_audit24: "24/7 Audit",
+        pillar3_eyebrow: "03 / Financial Sovereignty", pillar3_title: "x402 Protocol: Machine‑to‑Machine Payment",
+        pillar3_desc1: "An AI agent with its <strong style='color:var(--text-1)'>own sovereign wallet</strong>. It autonomously pays 1 XLM for premium data via x402.",
+        pillar3_desc2: "No intermediaries. Just intelligence paying for knowledge.",
+        p_tag_sov: "Sovereign Agent",
+        demo_eyebrow: "In Action", demo_title: "Aegis Thinking", demo_sub: "A real mission cycle: from scanning to on-chain payment.",
+        demo_line1: "# Initiating patrol cycle...",
+        cap_eyebrow: "Capabilities", cap_title: "Everything Aegis Does",
+        feat1_title: "Autonomous AI", feat1_desc: "Gemini 1.5 Flash analyzes every token with structured reasoning.",
+        feat2_title: "x402 Protocol", feat2_desc: "The agent autonomously pays for on-chain premium data.",
+        feat3_title: "Soroban Audit", feat3_desc: "Detection of honeypots and reentrancy on the Stellar network.",
+        feat4_title: "Live Risk Gauge", feat4_desc: "Visual meter reflecting the threat level in real-time.",
+        feat5_title: "On-Chain TX", feat5_desc: "Every payment is registered with a verifiable hash on StellarExpert.",
+        feat6_title: "Autonomous Mode", feat6_desc: "The agent operates in continuous cycles without human intervention.",
+        final_title: "The Sentinel doesn't sleep. Do you?",
+        final_sub: "Access Mission Control and watch Aegis patrol the Stellar network in real-time.",
+        final_btn: "⚡ Open Mission Control",
+        footer_built: "Built for Stellar Hackathon 2026 · Gemini AI × x402 × Soroban"
+    },
+    pt: {
+        nav_tech: "Tecnologia", nav_demo: "Demo", nav_features: "Funções", nav_dashboard: "Mission Control",
+        hero_eyebrow: "Sovereign Blockchain Guardian · Stellar Network",
+        hero_sub: "O primeiro agente de segurança autônomo da rede Stellar. Impulsionado por Gemini AI. Soberano com o Protocolo x402.",
+        btn_discover: "Descobrir a Missão", btn_access: "⚡ Acesso Direto",
+        stat_audited: "Tokens Auditados", stat_threats: "Ameaças Bloqueadas", stat_uptime: "% Uptime", stat_managed: "XLM Gerenciados",
+        pillar1_eyebrow: "01 / Cérebro Neural", pillar1_title: "Raciocínio Autônomo com Gemini",
+        pillar1_desc1: "Aegis não executa regras predefinidas. <strong style='color:var(--text-1)'>Ele pensa.</strong> O núcleo Gemini 1.5 Flash analisa simultaneamente a distribuição de holders e semântica.",
+        pillar1_desc2: "Cada decisão vem com raciocínio explícito: o agente justifica por que agirá.",
+        p_tag_json: "Modo JSON Estrito", p_tag_risk: "Risk Score 0-100", p_tag_semantic: "Análise Semântica",
+        pillar2_eyebrow: "02 / Defesa Ativa", pillar2_title: "O Bastião Soroban da Aegis",
+        pillar2_desc1: "Aegis atua como um escudo inteligente. Detecta honeypots e concentração anômala de carteiras antes que o investidor seja afetado.",
+        pillar2_desc2: "Cada ciclo de patrulha deixa a rede Stellar mais segura.",
+        p_tag_anti: "Anti-Honeypot", p_tag_reen: "Reentrancy Guard", p_tag_soroban: "Análise Soroban", p_tag_audit24: "Auditoria 24/7",
+        pillar3_eyebrow: "03 / Soberania Financeira", pillar3_title: "Protocolo x402: Pagamento Máquina‑a‑Máquina",
+        pillar3_desc1: "Um agente de IA com sua <strong style='color:var(--text-1)'>própria carteira soberana</strong>. Paga autonomamente 1 XLM por dados premium.",
+        pillar3_desc2: "Sem intermediários. Apenas inteligência pagando por conhecimento.",
+        p_tag_sov: "Agente Soberano",
+        demo_eyebrow: "Em Ação", demo_title: "Assim Pensa a Aegis", demo_sub: "Um ciclo de missão real: do scanner ao pagamento on-chain.",
+        demo_line1: "# Iniciando ciclo de patrulha...",
+        cap_eyebrow: "Capacidades", cap_title: "Tudo o que a Aegis faz",
+        feat1_title: "IA Autônoma", feat1_desc: "Gemini 1.5 Flash analisa cada token com raciocínio estruturado.",
+        feat2_title: "Protocolo x402", feat2_desc: "O agente paga autonomamente por dados premium on-chain.",
+        feat3_title: "Auditoria Soroban", feat3_desc: "Detecção de honeypots e reentrancy na rede Stellar.",
+        feat4_title: "Risk Gauge ao Vivo", feat4_desc: "Medidor visual que reflete o nível de ameaça em tempo real.",
+        feat5_title: "TX On-Chain", feat5_desc: "Cada pagamento é registrado com hash verificável no StellarExpert.",
+        feat6_title: "Modo Autônomo", feat6_desc: "O agente opera em ciclos contínuos sem intervenção humana.",
+        final_title: "O Sentinela não dorme. E você?",
+        final_sub: "Acesse o Mission Control e observe a Aegis patrulhar a rede Stellar em tempo real.",
+        final_btn: "⚡ Abrir Mission Control",
+        footer_built: "Construído para Stellar Hackathon 2026 · Gemini AI × x402 × Soroban"
+    }
+};
+
+function updateLanguage(lang) {
+    document.querySelectorAll('[data-t]').forEach(el => {
+        const key = el.getAttribute('data-t');
+        if (i18n[lang] && i18n[lang][key]) {
+            el.innerHTML = i18n[lang][key];
+        }
+    });
+    localStorage.setItem('aegis_lang', lang);
+    document.getElementById('langSelect').value = lang;
+}
+
+// ── Theme System ──────────────────────────────────────────────────
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme') || 'dark';
+    const next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('aegis_theme', next);
+}
+
+// ── Initialization ────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+    // Theme sync
+    const savedTheme = localStorage.getItem('aegis_theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    
+    // Lang sync
+    const savedLang = localStorage.getItem('aegis_lang') || 'es';
+    updateLanguage(savedLang);
+
+    // Events
+    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+    document.getElementById('langSelect').addEventListener('change', (e) => updateLanguage(e.target.value));
+});
+
 // ── Radar Canvas Background ─────────────────────────────────────
 const canvas = document.getElementById('bgCanvas');
 const ctx = canvas.getContext('2d');
@@ -774,36 +968,28 @@ function resize() { W = canvas.width = window.innerWidth; H = canvas.height = wi
 window.addEventListener('resize', resize);
 resize();
 
-// Particle dots
 const particles = Array.from({length: 60}, () => ({
-    x: Math.random() * W,
-    y: Math.random() * H,
-    r: Math.random() * 1.5 + 0.5,
-    a: Math.random() * Math.PI * 2,
-    speed: Math.random() * 0.3 + 0.1,
-    opacity: Math.random() * 0.4 + 0.1
+    x: Math.random() * W, y: Math.random() * H,
+    r: Math.random() * 1.5 + 0.5, a: Math.random() * Math.PI * 2,
+    speed: Math.random() * 0.3 + 0.1, opacity: Math.random() * 0.4 + 0.1
 }));
 
 function drawRadar() {
     ctx.clearRect(0, 0, W, H);
+    const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+    const baseColor = isLight ? '0, 0, 0' : '0, 242, 255';
     const cx = W / 2, cy = H * 0.45;
     const maxR = Math.min(W, H) * 0.42;
 
-    // Grid circles
     for (let i = 1; i <= 4; i++) {
-        ctx.beginPath();
-        ctx.arc(cx, cy, (maxR / 4) * i, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(0,242,255,${0.03 + i * 0.01})`;
-        ctx.lineWidth = 1;
-        ctx.stroke();
+        ctx.beginPath(); ctx.arc(cx, cy, (maxR / 4) * i, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(${baseColor},${isLight ? (0.12 + i * 0.06) : (0.03 + i * 0.01)})`;
+        ctx.lineWidth = isLight ? 1.5 : 1; ctx.stroke();
     }
-
-    // Cross lines
-    ctx.strokeStyle = 'rgba(0,242,255,0.04)';
+    ctx.strokeStyle = `rgba(${baseColor},${isLight ? 0.25 : 0.04})`;
     ctx.beginPath(); ctx.moveTo(cx - maxR, cy); ctx.lineTo(cx + maxR, cy); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(cx, cy - maxR); ctx.lineTo(cx, cy + maxR); ctx.stroke();
 
-    // Radar sweep
     ctx.save();
     ctx.translate(cx, cy);
     ctx.rotate(angle);
@@ -813,8 +999,8 @@ function drawRadar() {
     ctx.arc(0, 0, maxR, -0.4, 0, false);
     ctx.closePath();
     const sweep = ctx.createRadialGradient(0, 0, 0, 0, 0, maxR);
-    sweep.addColorStop(0, 'rgba(0,242,255,0.12)');
-    sweep.addColorStop(1, 'rgba(0,242,255,0)');
+    sweep.addColorStop(0, `rgba(${baseColor},${isLight ? 0.3 : 0.12})`);
+    sweep.addColorStop(1, `rgba(${baseColor},0)`);
     ctx.fillStyle = sweep;
     ctx.fill();
     ctx.restore();
@@ -823,7 +1009,7 @@ function drawRadar() {
     particles.forEach(p => {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(0,242,255,${p.opacity})`;
+        ctx.fillStyle = `rgba(${baseColor},${isLight ? (p.opacity * 2.5) : p.opacity})`;
         ctx.fill();
         p.x += Math.cos(p.a) * p.speed;
         p.y += Math.sin(p.a) * p.speed;
