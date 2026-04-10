@@ -13,6 +13,10 @@ Route::get('/', function () {
     return view('welcome', compact('stats'));
 });
 
+Route::get('/tutorial', function () {
+    return view('tutorial');
+});
+
 Route::get('/mission-control', function () {
     return view('dashboard'); // El tablero actual
 });

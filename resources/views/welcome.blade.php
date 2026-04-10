@@ -647,6 +647,7 @@
 
     <div class="hero-cta">
         <a href="#pilares" class="cta-main" data-t="btn_discover">Descubrir la Misión</a>
+        <a href="/tutorial" class="cta-ghost" data-t="btn_tutorial">📖 Tutorial Interactivo</a>
         <a href="/mission-control" class="cta-ghost" data-t="btn_access">⚡ Acceso Directo</a>
     </div>
 
@@ -831,7 +832,7 @@ const i18n = {
         nav_tech: "Tecnología", nav_demo: "Demo", nav_features: "Funciones", nav_dashboard: "Mission Control",
         hero_eyebrow: "Sovereign Blockchain Guardian · Stellar Network",
         hero_sub: "El primer agente de seguridad autónomo de la red Stellar. Impulsado por Gemini AI. Soberano con el Protocolo x402.",
-        btn_discover: "Descubrir la Misión", btn_access: "⚡ Acceso Directo",
+        btn_discover: "Descubrir la Misión", btn_tutorial: "📖 Tutorial Interactivo", btn_access: "⚡ Acceso Directo",
         stat_audited: "Tokens Auditados", stat_threats: "Amenazas Bloqueadas", stat_uptime: "% Uptime", stat_managed: "XLM Gestionados",
         pillar1_eyebrow: "01 / Cerebro Neural", pillar1_title: "Razonamiento Autónomo con Gemini",
         pillar1_desc1: "Aegis no ejecuta reglas predefinidas. <strong style='color:var(--text-1)'>Piensa.</strong> El núcleo Gemini 1.5 Flash analiza simultáneamente la distribución de holders, la semántica del contrato y las señales de mercado.",
@@ -863,7 +864,7 @@ const i18n = {
         nav_tech: "Technology", nav_demo: "Demo", nav_features: "Features", nav_dashboard: "Mission Control",
         hero_eyebrow: "Sovereign Blockchain Guardian · Stellar Network",
         hero_sub: "The first autonomous security agent on the Stellar network. Powered by Gemini AI. Sovereign with the x402 Protocol.",
-        btn_discover: "Discover the Mission", btn_access: "⚡ Direct Access",
+        btn_discover: "Discover the Mission", btn_tutorial: "📖 Interactive Tutorial", btn_access: "⚡ Direct Access",
         stat_audited: "Tokens Audited", stat_threats: "Threats Blocked", stat_uptime: "% Uptime", stat_managed: "XLM Managed",
         pillar1_eyebrow: "01 / Neural Brain", pillar1_title: "Autonomous Reasoning with Gemini",
         pillar1_desc1: "Aegis doesn't run predefined rules. <strong style='color:var(--text-1)'>It thinks.</strong> The Gemini 1.5 Flash core analyzes holder distribution, contract semantics, and market signals.",
@@ -895,7 +896,7 @@ const i18n = {
         nav_tech: "Tecnologia", nav_demo: "Demo", nav_features: "Funções", nav_dashboard: "Mission Control",
         hero_eyebrow: "Sovereign Blockchain Guardian · Stellar Network",
         hero_sub: "O primeiro agente de segurança autônomo da rede Stellar. Impulsionado por Gemini AI. Soberano com o Protocolo x402.",
-        btn_discover: "Descobrir a Missão", btn_access: "⚡ Acesso Direto",
+        btn_discover: "Descobrir a Missão", btn_tutorial: "📖 Tutorial Interativo", btn_access: "⚡ Acesso Direto",
         stat_audited: "Tokens Auditados", stat_threats: "Ameaças Bloqueadas", stat_uptime: "% Uptime", stat_managed: "XLM Gerenciados",
         pillar1_eyebrow: "01 / Cérebro Neural", pillar1_title: "Raciocínio Autônomo com Gemini",
         pillar1_desc1: "Aegis não executa regras predefinidas. <strong style='color:var(--text-1)'>Ele pensa.</strong> O núcleo Gemini 1.5 Flash analisa simultaneamente a distribuição de holders e semântica.",
