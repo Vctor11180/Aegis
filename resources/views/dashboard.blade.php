@@ -885,6 +885,8 @@
         </div>
 
         <!-- Gemini Thinking HUD -->
+        <div class="gemini-hud" id="geminiHud">
+            <div class="gemini-progress" id="geminiProgress"></div>
             <div class="slab" data-t="gemini_title">Núcleo Gemini 1.5</div>
             <div style="font-size:0.8rem;line-height:1.5;color:var(--text-2);" id="geminiText">
                 Motor de IA en standby. Esperando token para analizar.
@@ -1219,11 +1221,34 @@ function setGeminiThinking(thinking, text = '') {
     const bar = document.getElementById('geminiProgress');
     const txt = document.getElementById('geminiText');
     if (thinking) {
-        hud.classList.add('thinking'); bar.style.width = '1000%';
+        hud.classList.add('thinking'); bar.style.width = '100%';
         txt.textContent = t('gemini_thinking');
     } else {
         hud.classList.remove('thinking'); bar.style.width = '0%';
         if (text) txt.textContent = text;
+    }
+}
+
+// ── Token Card ────────────────────────────────────────────────────
+function showTokenCard(meta, riskScore, threatLevel) {
+    if (!meta) return;
+    const card = document.getElementById('tokenCard');
+    if (!card) return;
+    card.classList.add('visible');
+    document.getElementById('tokenSymbol').textContent = meta.symbol || '—';
+    document.getElementById('tokenName').textContent   = meta.name || '—';
+    document.getElementById('tokenHolders').textContent = (meta.total_holders || '—').toLocaleString();
+    const verBadge = document.getElementById('tokenVerBadge');
+    if (verBadge) {
+        verBadge.innerHTML = meta.verified
+            ? '<span class="token-badge badge-verified">✓ VERIFICADO</span>'
+            : '<span class="token-badge badge-unverified">✗ NO VERIFICADO</span>';
+    }
+    const threatEl = document.getElementById('tokenThreat');
+    if (threatEl) {
+        const cls = { BAJO:'tv-low', MEDIO:'tv-med', ALTO:'tv-high', CRITICO:'tv-crit' };
+        threatEl.textContent = threatLevel || '—';
+        threatEl.className = `threat-val ${cls[threatLevel] || ''}`;
     }
 }
 
