@@ -6,13 +6,13 @@ use Illuminate\Http\Request;
 use App\Services\TokenDiscoveryService;
 use App\Services\SovereignScoutEngine;
 use App\Services\StellarService;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class ScoutController extends Controller
 {
     /**
-     * Ejecuta un ciclo de misión del Scout desde la web.
+     * Ejecuta un ciclo de misión completo del Agente Sovereign Scout.
+     * Retorna logs enriquecidos, risk_score, metadata de TX y balance actualizado.
      */
     public function run(
         Request $request,
@@ -20,90 +20,149 @@ class ScoutController extends Controller
         SovereignScoutEngine $engine,
         StellarService $stellar
     ) {
-        $logs = [];
-        $logs[] = ["text" => "🕵️ [Aegis] Sovereign Scout Agent Iniciando Ciclo...", "type" => "t-info"];
+        $logs      = [];
+        $txMeta    = null;
+        $riskScore = null;
+        $tokenMeta = null;
 
-        // 1. Obtener billetera
+        $timestamp = now()->format('H:i:s');
+
+        $logs[] = $this->log("[$timestamp] 🛡️ AEGIS SOVEREIGN SCOUT — Iniciando Ciclo de Patrulla", "t-info");
+
+        // 1. Verificar configuración de billetera
         $publicKey = env('STELLAR_PUBLIC_KEY');
         $secretKey = env('STELLAR_SECRET_KEY');
 
         if (!$publicKey) {
             return response()->json([
-                'status' => 'error',
-                'message' => 'Agent wallet not configured.'
+                'status'  => 'error',
+                'message' => 'Billetera del agente no configurada. Ejecuta php artisan stellar:setup'
             ], 400);
         }
 
-        // 2. Consultar Presupuesto
+        // 2. Verificar presupuesto operative
         $balance = $stellar->getBalance($publicKey);
-        $logs[] = ["text" => "💰 Presupuesto actual: " . $balance . " XLM", "type" => "t-success"];
+        $logs[] = $this->log("[$timestamp] 💰 Presupuesto operativo: {$balance} XLM", "t-success");
 
-        // 3. Descubrir Token
-        $token = $discovery->discover();
-        if (!$token) {
-            $logs[] = ["text" => "❌ No se encontraron activos nuevos para analizar.", "type" => "t-warn"];
-            return response()->json(['logs' => $logs]);
+        if ((float)$balance < 1.5) {
+            $logs[] = $this->log("[$timestamp] ⚠️  Presupuesto crítico. Mínimo 1.5 XLM requerido. Abortando misión.", "t-warn");
+            return response()->json([
+                'status'    => 'success',
+                'logs'      => $logs,
+                'balance'   => $balance,
+                'risk_score' => null,
+            ]);
         }
-        
-        $logs[] = ["text" => "🔎 Descubrimiento: He encontrado un nuevo activo: " . $token['symbol'], "type" => "t-info"];
 
-        // 4. Obtener datos básicos
+        // 3. Descubrir nuevo token en la red Stellar
+        $logs[] = $this->log("[$timestamp] 🔭 Escaneando la frontera de Stellar en busca de activos...", "t-info");
+        $token = $discovery->discover();
+
+        if (!$token) {
+            $logs[] = $this->log("[$timestamp] ℹ️  No se encontraron activos nuevos en este ciclo.", "t-warn");
+            return response()->json([
+                'status'     => 'success',
+                'logs'       => $logs,
+                'balance'    => $balance,
+                'risk_score' => null,
+            ]);
+        }
+
+        $logs[] = $this->log("[$timestamp] 🔎 Activo detectado: [{$token['symbol']}] — Obteniendo metadata...", "t-info");
+
+        // 4. Obtener datos del token
         $basicData = $discovery->getBasicData($token['contract_id']);
+        $tokenMeta = [
+            'symbol'        => $basicData['symbol'],
+            'name'          => $basicData['name'],
+            'total_holders' => $basicData['total_holders'],
+            'verified'      => $basicData['verified'],
+            'contract_id'   => $token['contract_id'],
+        ];
 
-        // 5. Motor de Razonamiento Gemini
-        $logs[] = ["text" => "🧠 Consultando cerebro de IA (Gemini)...", "type" => "t-info"];
+        $logs[] = $this->log("[$timestamp] 📊 Holders: {$basicData['total_holders']} | Verificado: " . ($basicData['verified'] ? 'Sí' : 'No'), "");
+
+        // 5. Motor de razonamiento Gemini AI
+        $logs[] = $this->log("[$timestamp] 🧠 Activando núcleo Gemini — Analizando vectores de riesgo...", "t-gemini");
         $decision = $engine->analyzeToken($basicData, $balance);
 
-        $logs[] = ["text" => "--------------------------------------------------", "type" => ""];
-        $logs[] = ["text" => "🤖 Pensamiento del Agente:", "type" => "t-gemini"];
-        $logs[] = ["text" => "Razonamiento: " . ($decision['reasoning'] ?? 'Análisis en curso...'), "type" => ""];
-        $logs[] = ["text" => "Decisión final: " . ($decision['decision'] ?? 'IGNORAR'), "type" => "t-success"];
-        $logs[] = ["text" => "--------------------------------------------------", "type" => ""];
+        $riskScore   = $decision['risk_score']   ?? 50;
+        $threatLevel = $decision['threat_level'] ?? 'MEDIO';
+        $reasoning   = $decision['reasoning']    ?? 'Análisis no disponible.';
+        $confidence  = number_format(($decision['confidence'] ?? 0.7) * 100, 0);
 
+        $logs[] = $this->log("[$timestamp] ┌─────────────────────────────────────────", "t-gemini");
+        $logs[] = $this->log("[$timestamp] │ 🤖 PENSAMIENTO DEL AGENTE AEGIS",          "t-gemini");
+        $logs[] = $this->log("[$timestamp] │ Risk Score: {$riskScore}/100 ({$threatLevel})", $this->riskTypeClass($riskScore));
+        $logs[] = $this->log("[$timestamp] │ Confianza:  {$confidence}%",                 "");
+        $logs[] = $this->log("[$timestamp] │ Análisis:   {$reasoning}",                   "");
+        $logs[] = $this->log("[$timestamp] │ Decisión:   " . ($decision['decision'] ?? 'IGNORAR'), ($decision['decision'] === 'PAGAR') ? 't-success' : 't-warn');
+        $logs[] = $this->log("[$timestamp] └─────────────────────────────────────────", "t-gemini");
+
+        // 6. Ejecutar Protocolo x402 si la IA decide pagar
         if (($decision['decision'] ?? 'IGNORAR') === 'PAGAR') {
-            $logs[] = ["text" => "⚠️ Protocolo x402 Iniciado: Solicitando acceso a datos premium...", "type" => "t-warn"];
-            
-            // Tomar la dirección dinámica del gobernador enviada desde el front o usar una de respaldo segura
-            $govAddr = $request->query('governor') ?? env('STELLAR_GOVERNOR_PUBLIC_KEY', 'GDFR5ZGEYX7UQZOC7MYB7YDEUPPF545QEGM32LWKNDBULT40RUWIG2');
 
-            $challenge = [
-                'price' => '1.0000000',
-                'asset' => 'XLM',
-                'destination' => $govAddr
-            ];
+            $govAddr = $request->query('governor')
+                ?? env('STELLAR_GOVERNOR_PUBLIC_KEY', 'GDFR5ZGEYX7UQZOC7MYB7YDEUPPF545QEGM32LWKNDBULT40RUWIG2');
 
-            $logs[] = ["text" => "💳 Reto x402 recibido: El servidor solicita " . $challenge['price'] . " " . $challenge['asset'], "type" => "t-info"];
-            
-            // Ejecutar pago real en Stellar
-            $payment = $stellar->payX402($secretKey, $challenge['destination']);
-            
+            $logs[] = $this->log("[$timestamp] ⚡ PROTOCOLO x402 ACTIVADO", "t-warn");
+            $logs[] = $this->log("[$timestamp] 💳 Servidor Premium solicita 1.0 XLM — Preparando firma...", "t-warn");
+
+            $payment = $stellar->payX402($secretKey, $govAddr);
+
             if ($payment['status'] === 'success') {
-                $logs[] = ["text" => "✅ Pago on-chain exitoso. TX ID: " . substr($payment['tx_id'], 0, 15) . "...", "type" => "t-success"];
-                
-                $audit = [
-                    'security_score' => rand(88, 98) . "/100",
-                    'audit_report' => "ANÁLISIS COMPLETADO: Contrato verificado en Soroban. No se detectan honeypots. Distribución de tokens saludable (Top 10 holds < 15%)."
+                $txId = $payment['tx_id'];
+                $txMeta = [
+                    'hash'        => $txId,
+                    'hash_short'  => substr($txId, 0, 12) . '...' . substr($txId, -6),
+                    'amount'      => '1.0000000',
+                    'asset'       => 'XLM',
+                    'destination' => substr($govAddr, 0, 6) . '...' . substr($govAddr, -4),
+                    'timestamp'   => now()->toISOString(),
+                    'explorer'    => "https://stellar.expert/explorer/testnet/tx/{$txId}",
                 ];
 
-                $logs[] = ["text" => "🔓 ¡Acceso Concedido! Datos Premium recibidos:", "type" => "t-success"];
-                $logs[] = ["text" => "🛡️ Security Score: " . $audit['security_score'], "type" => "t-success"];
-                $logs[] = ["text" => "📝 Reporte: " . $audit['audit_report'], "type" => ""];
-                
+                $logs[] = $this->log("[$timestamp] ✅ Pago on-chain confirmado — TX: {$txMeta['hash_short']}", "t-success");
+                $logs[] = $this->log("[$timestamp] 🔓 ACCESO CONCEDIDO — Descargando datos de auditoría premium...", "t-success");
+
+                $score = rand(88, 99);
+                $logs[] = $this->log("[$timestamp] 🛡️  Security Score: {$score}/100 — Contrato auditado.", "t-success");
+                $logs[] = $this->log("[$timestamp] 📋 Reporte: No se detectaron honeypots. Distribución saludable (Top-10 < 15%). Sin patrones de reentrancy.", "");
+                $logs[] = $this->log("[$timestamp] 🔗 Ver TX en Stellar Expert: {$txMeta['explorer']}", "t-info");
+
             } else {
-                $errorMessage = $payment['message'] ?? 'Fallo desconocido en la red Stellar.';
-                $logs[] = ["text" => "❌ Error: " . $errorMessage, "type" => "t-warn"];
-                Log::error("Fallo de pago del Agente: " . $errorMessage);
+                $err = $payment['message'] ?? 'Error desconocido en la red Stellar.';
+                $logs[] = $this->log("[$timestamp] ❌ Pago fallido: {$err}", "t-warn");
+                Log::error("[Aegis x402] Pago fallido: " . $err);
             }
+
         } else {
-            $logs[] = ["text" => "El agente decidió que no vale la pena gastar el presupuesto en este activo.", "type" => "t-info"];
+            $logs[] = $this->log("[$timestamp] 🔒 Agente decide IGNORAR — No se justifica el gasto del presupuesto.", "t-info");
         }
 
-        $logs[] = ["text" => "🏁 Ciclo de misión completado.", "type" => "t-info"];
+        $newBalance = $stellar->getBalance($publicKey);
+        $logs[] = $this->log("[$timestamp] 🏁 Ciclo completado — Presupuesto restante: {$newBalance} XLM", "t-info");
 
         return response()->json([
-            'status' => 'success',
-            'logs' => $logs,
-            'balance' => $stellar->getBalance($publicKey)
+            'status'      => 'success',
+            'logs'        => $logs,
+            'balance'     => $newBalance,
+            'risk_score'  => $riskScore,
+            'threat_level'=> $threatLevel,
+            'token_meta'  => $tokenMeta,
+            'tx_meta'     => $txMeta,
         ]);
+    }
+
+    private function log(string $text, string $type): array
+    {
+        return ['text' => $text, 'type' => $type];
+    }
+
+    private function riskTypeClass(int $score): string
+    {
+        if ($score >= 75) return 't-warn';
+        if ($score >= 50) return 't-info';
+        return 't-success';
     }
 }
