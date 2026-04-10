@@ -673,6 +673,7 @@
             </select>
             <button class="top-btn" id="themeToggle" title="Toggle Theme">🌓</button>
             <div style="width:1px; height:20px; background:var(--border); margin:0 4px;"></div>
+            <a href="/tutorial" class="back-link" title="Tutorial">📖</a>
             <a href="/" class="back-link">← <span data-t="nav_landing">Landing</span></a>
         </div>
     </header>

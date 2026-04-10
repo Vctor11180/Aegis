@@ -528,6 +528,7 @@
         <a href="#pilares" data-t="nav_tech">Tecnología</a>
         <a href="#demo" data-t="nav_demo">Demo</a>
         <a href="#funciones" data-t="nav_features">Funciones</a>
+        <a href="/tutorial" data-t="nav_howto">Cómo Funciona</a>
         <div style="width:1px; height:20px; background:var(--border); margin:0 4px;"></div>
         <select class="lang-select" id="langSelect">
             <option value="es">ES</option>
@@ -761,6 +762,9 @@
                 <div class="dl dl-d" data-t="demo_line1"># Iniciando ciclo de patrulla...</div>
             </div>
         </div>
+        <div style="text-align:center;margin-top:2.5rem;" class="reveal">
+            <a href="/tutorial" class="cta-main" style="font-size:1rem;padding:1rem 2.5rem;" data-t="demo_btn_tutorial">📖 Ver Tutorial Completo</a>
+        </div>
     </div>
 </section>
 
@@ -808,7 +812,10 @@
 <section class="final-cta">
     <h2 class="reveal" data-t="final_title">El Centinela no duerme.<br>¿Y tú?</h2>
     <p class="reveal" data-t="final_sub">Accede al Mission Control y observa a Aegis patrullar la red Stellar en tiempo real.</p>
-    <div class="reveal">
+    <div class="reveal" style="display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;">
+        <a href="/tutorial" class="cta-ghost" style="font-size:1rem;padding:1rem 2.5rem;" data-t="final_btn_tutorial">
+            📖 Tutorial Paso a Paso
+        </a>
         <a href="/mission-control" class="cta-main" style="font-size:1.1rem;padding:1.2rem 3.5rem;" data-t="final_btn">
             ⚡ Abrir Mission Control
         </a>
@@ -829,7 +836,7 @@
 // ── i18n System ──────────────────────────────────────────────────
 const i18n = {
     es: {
-        nav_tech: "Tecnología", nav_demo: "Demo", nav_features: "Funciones", nav_dashboard: "Mission Control",
+        nav_tech: "Tecnología", nav_demo: "Demo", nav_features: "Funciones", nav_howto: "Cómo Funciona", nav_dashboard: "Mission Control",
         hero_eyebrow: "Sovereign Blockchain Guardian · Stellar Network",
         hero_sub: "El primer agente de seguridad autónomo de la red Stellar. Impulsado por Gemini AI. Soberano con el Protocolo x402.",
         btn_discover: "Descubrir la Misión", btn_tutorial: "📖 Tutorial Interactivo", btn_access: "⚡ Acceso Directo",
@@ -848,6 +855,7 @@ const i18n = {
         p_tag_sov: "Agente Soberano",
         demo_eyebrow: "En Acción", demo_title: "Así Piensa Aegis", demo_sub: "Un ciclo de misión real: desde el escaneo hasta el pago on-chain.",
         demo_line1: "# Iniciando ciclo de patrulla...",
+        demo_btn_tutorial: "📖 Ver Tutorial Completo",
         cap_eyebrow: "Capacidades", cap_title: "Todo lo que hace Aegis",
         feat1_title: "IA Autónoma", feat1_desc: "Gemini 1.5 Flash analiza cada token con razonamiento estructurado.",
         feat2_title: "Protocolo x402", feat2_desc: "El agente paga autónomamente por datos premium on-chain.",
@@ -858,10 +866,11 @@ const i18n = {
         final_title: "El Centinela no duerme. ¿Y tú?",
         final_sub: "Accede al Mission Control y observa a Aegis patrullar la red Stellar en tiempo real.",
         final_btn: "⚡ Abrir Mission Control",
+        final_btn_tutorial: "📖 Tutorial Paso a Paso",
         footer_built: "Construido para Stellar Hackathon 2026 · Gemini AI × x402 × Soroban"
     },
     en: {
-        nav_tech: "Technology", nav_demo: "Demo", nav_features: "Features", nav_dashboard: "Mission Control",
+        nav_tech: "Technology", nav_demo: "Demo", nav_features: "Features", nav_howto: "How It Works", nav_dashboard: "Mission Control",
         hero_eyebrow: "Sovereign Blockchain Guardian · Stellar Network",
         hero_sub: "The first autonomous security agent on the Stellar network. Powered by Gemini AI. Sovereign with the x402 Protocol.",
         btn_discover: "Discover the Mission", btn_tutorial: "📖 Interactive Tutorial", btn_access: "⚡ Direct Access",
@@ -880,6 +889,7 @@ const i18n = {
         p_tag_sov: "Sovereign Agent",
         demo_eyebrow: "In Action", demo_title: "Aegis Thinking", demo_sub: "A real mission cycle: from scanning to on-chain payment.",
         demo_line1: "# Initiating patrol cycle...",
+        demo_btn_tutorial: "📖 View Full Tutorial",
         cap_eyebrow: "Capabilities", cap_title: "Everything Aegis Does",
         feat1_title: "Autonomous AI", feat1_desc: "Gemini 1.5 Flash analyzes every token with structured reasoning.",
         feat2_title: "x402 Protocol", feat2_desc: "The agent autonomously pays for on-chain premium data.",
@@ -890,10 +900,11 @@ const i18n = {
         final_title: "The Sentinel doesn't sleep. Do you?",
         final_sub: "Access Mission Control and watch Aegis patrol the Stellar network in real-time.",
         final_btn: "⚡ Open Mission Control",
+        final_btn_tutorial: "📖 Step-by-Step Tutorial",
         footer_built: "Built for Stellar Hackathon 2026 · Gemini AI × x402 × Soroban"
     },
     pt: {
-        nav_tech: "Tecnologia", nav_demo: "Demo", nav_features: "Funções", nav_dashboard: "Mission Control",
+        nav_tech: "Tecnologia", nav_demo: "Demo", nav_features: "Funções", nav_howto: "Como Funciona", nav_dashboard: "Mission Control",
         hero_eyebrow: "Sovereign Blockchain Guardian · Stellar Network",
         hero_sub: "O primeiro agente de segurança autônomo da rede Stellar. Impulsionado por Gemini AI. Soberano com o Protocolo x402.",
         btn_discover: "Descobrir a Missão", btn_tutorial: "📖 Tutorial Interativo", btn_access: "⚡ Acesso Direto",
@@ -912,6 +923,7 @@ const i18n = {
         p_tag_sov: "Agente Soberano",
         demo_eyebrow: "Em Ação", demo_title: "Assim Pensa a Aegis", demo_sub: "Um ciclo de missão real: do scanner ao pagamento on-chain.",
         demo_line1: "# Iniciando ciclo de patrulha...",
+        demo_btn_tutorial: "📖 Ver Tutorial Completo",
         cap_eyebrow: "Capacidades", cap_title: "Tudo o que a Aegis faz",
         feat1_title: "IA Autônoma", feat1_desc: "Gemini 1.5 Flash analisa cada token com raciocínio estruturado.",
         feat2_title: "Protocolo x402", feat2_desc: "O agente paga autonomamente por dados premium on-chain.",
@@ -922,6 +934,7 @@ const i18n = {
         final_title: "O Sentinela não dorme. E você?",
         final_sub: "Acesse o Mission Control e observe a Aegis patrulhar a rede Stellar em tempo real.",
         final_btn: "⚡ Abrir Mission Control",
+        final_btn_tutorial: "📖 Tutorial Passo a Passo",
         footer_built: "Construído para Stellar Hackathon 2026 · Gemini AI × x402 × Soroban"
     }
 };
