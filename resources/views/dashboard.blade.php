@@ -1217,14 +1217,19 @@ function setX402State(stateName) {
 }
 
 function setGeminiThinking(thinking, text = '') {
-    const hud = document.getElementById('geminiHud');
-    const bar = document.getElementById('geminiProgress');
-    const txt = document.getElementById('geminiText');
+    const hud  = document.getElementById('geminiHud');
+    const bar  = document.getElementById('geminiProgress');
+    const dots = document.getElementById('geminiDots');
+    const txt  = document.getElementById('geminiText');
     if (thinking) {
-        hud.classList.add('thinking'); bar.style.width = '100%';
+        hud.classList.add('thinking');
+        bar.style.width = '100%';
+        if (dots) dots.classList.add('active');
         txt.textContent = t('gemini_thinking');
     } else {
-        hud.classList.remove('thinking'); bar.style.width = '0%';
+        hud.classList.remove('thinking');
+        bar.style.width = '0%';
+        if (dots) dots.classList.remove('active');
         if (text) txt.textContent = text;
     }
 }
