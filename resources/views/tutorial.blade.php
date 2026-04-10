@@ -15,21 +15,48 @@
             --text-1:#ffffff;--text-2:#b0b0cc;--text-3:#606080;
             --border:rgba(255,255,255,0.08);
             --glow:rgba(0,229,255,0.15);
+            --glass: rgba(10, 10, 21, 0.7);
+        }
+        [data-theme="light"] {
+            --bg-0:#f8fafc;--bg-1:#ffffff;--bg-2:#f1f5f9;--bg-3:#e2e8f0;
+            --text-1:#0f172a;--text-2:#475569;--text-3:#94a3b8;
+            --border:rgba(0,0,0,0.08);
+            --glow:rgba(0,229,255,0.1);
+            --glass: rgba(255, 255, 255, 0.7);
         }
         *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
         html{scroll-behavior:smooth;}
-        body{background:var(--bg-0);color:var(--text-1);font-family:'Outfit',sans-serif;overflow-x:hidden;}
+        body{background:var(--bg-0);color:var(--text-1);font-family:'Outfit',sans-serif;overflow-x:hidden; transition: background 0.3s, color 0.3s;}
 
         /* ─── NAV ───────────────────── */
-        .tut-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;height:64px;background:rgba(5,5,10,0.7);backdrop-filter:blur(15px);border-bottom:1px solid var(--border);}
+        .tut-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;height:64px;background:var(--glass);backdrop-filter:blur(15px);border-bottom:1px solid var(--border); transition: background 0.3s;}
         .tut-brand{display:flex;align-items:center;gap:0.8rem;text-decoration:none;color:var(--text-1);}
         .tut-brand-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--primary),var(--secondary));clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:0.9rem;box-shadow: 0 0 15px rgba(255,30,0,0.3);}
         .tut-brand span{font-weight:700;font-size:1rem;letter-spacing:1px;text-transform: uppercase;}
         .tut-brand em{font-style:normal;font-weight:300;color:var(--accent);opacity: 0.8;}
         .tut-nav-right{display:flex;align-items:center;gap:1rem;}
-        .tut-lang{background:var(--bg-3);border:1px solid var(--border);color:var(--text-2);font-size:0.7rem;padding:4px 8px;border-radius:6px;font-family:'Outfit';font-weight:600;outline:none;cursor:pointer;}
+        .tut-lang{background:var(--bg-3);border:1px solid var(--border);color:var(--text-2);font-size:0.7rem;padding:4px 8px;border-radius:6px;font-family:'Outfit';font-weight:600;outline:none;cursor:pointer; transition: all 0.3s;}
         .tut-skip{font-size:0.75rem;color:var(--text-3);text-decoration:none;transition:color 0.2s;}
         .tut-skip:hover{color:var(--accent);}
+        .theme-btn {
+            background: var(--bg-3);
+            border: 1px solid var(--border);
+            color: var(--text-2);
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+        .theme-btn:hover {
+            background: var(--bg-2);
+            color: var(--text-1);
+            transform: translateY(-2px);
+        }
 
         /* ─── PROGRESS BAR ──────────── */
         .progress-track{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--bg-3);z-index:99;}
@@ -90,7 +117,7 @@
         .ui-map{background:var(--bg-2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--text-3);line-height:1.8;white-space:pre;overflow-x:auto;margin:1.5rem 0;}
 
         /* ─── NAV BUTTONS ───────────── */
-        .slide-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(7,7,13,0.92);backdrop-filter:blur(20px);border-top:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;z-index:100;}
+        .slide-nav{position:fixed;bottom:0;left:0;right:0;background:var(--glass);backdrop-filter:blur(20px);border-top:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;z-index:100; transition: background 0.3s;}
         .slide-dots{display:flex;gap:6px;}
         .slide-dot{width:8px;height:8px;border-radius:50%;background:var(--bg-3);cursor:pointer;transition:all 0.3s;}
         .slide-dot.active{background:var(--accent);width:24px;border-radius:4px;}
@@ -138,6 +165,7 @@
             <option value="en">EN</option>
             <option value="pt">PT</option>
         </select>
+        <button class="theme-btn" id="themeToggle" title="Toggle Theme">🌓</button>
         <a href="/mission-control" class="tut-skip" id="skipLink">Saltar tutorial →</a>
     </div>
 </nav>
@@ -669,6 +697,17 @@ document.addEventListener('keydown', (e) => {
 // Init
 updateUI();
 goToSlide(0);
+
+// ── Theme Logic ──────────────────────────────────────────
+const themeBtn = document.getElementById('themeToggle');
+let currentTheme = localStorage.getItem('aegis_theme') || 'dark';
+document.documentElement.setAttribute('data-theme', currentTheme);
+
+themeBtn.addEventListener('click', () => {
+    currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    localStorage.setItem('aegis_theme', currentTheme);
+});
 </script>
 </body>
 </html>
