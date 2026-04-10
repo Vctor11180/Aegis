@@ -9,22 +9,23 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-0:#020204;--bg-1:#07070d;--bg-2:#0d0d18;--bg-3:#111120;
-            --primary:#f61500;--secondary:#ff750f;--accent:#00f2ff;
-            --green:#00ffa3;--violet:#7d42ff;--gold:#ffd740;
-            --text-1:#f0f0ee;--text-2:#a8a8a4;--text-3:#555560;
-            --border:rgba(255,255,255,0.07);
+            --bg-0:#05050a;--bg-1:#0a0a15;--bg-2:#0f0f1f;--bg-3:#15152a;
+            --primary:#ff1e00;--secondary:#ff8a00;--accent:#00e5ff;
+            --green:#00ffa3;--violet:#8c52ff;--gold:#ffcc00;
+            --text-1:#ffffff;--text-2:#b0b0cc;--text-3:#606080;
+            --border:rgba(255,255,255,0.08);
+            --glow:rgba(0,229,255,0.15);
         }
         *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
         html{scroll-behavior:smooth;}
         body{background:var(--bg-0);color:var(--text-1);font-family:'Outfit',sans-serif;overflow-x:hidden;}
 
         /* ─── NAV ───────────────────── */
-        .tut-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:56px;background:rgba(7,7,13,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
-        .tut-brand{display:flex;align-items:center;gap:0.6rem;text-decoration:none;color:var(--text-1);}
-        .tut-brand-icon{width:28px;height:28px;background:linear-gradient(135deg,var(--primary),var(--secondary));clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:0.8rem;}
-        .tut-brand span{font-weight:700;font-size:0.9rem;letter-spacing:1px;}
-        .tut-brand em{font-style:normal;font-weight:300;color:var(--accent);}
+        .tut-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;height:64px;background:rgba(5,5,10,0.7);backdrop-filter:blur(15px);border-bottom:1px solid var(--border);}
+        .tut-brand{display:flex;align-items:center;gap:0.8rem;text-decoration:none;color:var(--text-1);}
+        .tut-brand-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--primary),var(--secondary));clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:0.9rem;box-shadow: 0 0 15px rgba(255,30,0,0.3);}
+        .tut-brand span{font-weight:700;font-size:1rem;letter-spacing:1px;text-transform: uppercase;}
+        .tut-brand em{font-style:normal;font-weight:300;color:var(--accent);opacity: 0.8;}
         .tut-nav-right{display:flex;align-items:center;gap:1rem;}
         .tut-lang{background:var(--bg-3);border:1px solid var(--border);color:var(--text-2);font-size:0.7rem;padding:4px 8px;border-radius:6px;font-family:'Outfit';font-weight:600;outline:none;cursor:pointer;}
         .tut-skip{font-size:0.75rem;color:var(--text-3);text-decoration:none;transition:color 0.2s;}
@@ -184,20 +185,93 @@
     <h1 data-t="s2_title">Conoce tu Centro de Control</h1>
     <p data-t="s2_p1">La interfaz de Mission Control está dividida en 4 zonas. Cada una tiene un propósito específico:</p>
 
-    <div class="ui-map">┌──────────────────────────────────────────────────────────┐
-│               🔝  BARRA SUPERIOR                         │
-│  Logo │ Estado │ Red │ Reloj │ Idioma │ Tema │ Inicio    │
-├────────┬────────────────────────────────┬────────────────┤
-│        │                                │                │
-│ 📋     │     ⚡ CENTRO DE CONTROL       │    📊          │
-│ PANEL  │                                │    PANEL       │
-│ IZQ.   │  [EJECUTAR]    [AUTÓNOMO]      │    DERECHO     │
-│        │                                │                │
-│ Agente │    Tarjeta del Token           │  Audit Vault   │
-│ Budget │                                │  Protocolo     │
-│ Wallet │    Terminal de Logs            │  Gemini HUD    │
-│        │                                │  TX History    │
-└────────┴────────────────────────────────┴────────────────┘</div>
+    <style>
+        .ui-visual-map {
+            display: grid;
+            grid-template-areas: 
+                "top top top"
+                "left center right";
+            grid-template-columns: 240px 1fr 280px;
+            grid-template-rows: auto 1fr;
+            gap: 16px;
+            background: rgba(15, 15, 31, 0.4);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 16px;
+            margin: 2.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+            backdrop-filter: blur(10px);
+        }
+        .map-section {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--text-2);
+        }
+        .map-section:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: var(--accent);
+            transform: scale(1.03);
+            color: var(--text-1);
+            box-shadow: 0 0 20px rgba(0,229,255,0.1);
+        }
+        .map-top { grid-area: top; height: 50px; font-size: 0.75rem; color: var(--accent); }
+        .map-left { grid-area: left; height: 320px; font-size: 0.75rem; }
+        .map-center { 
+            grid-area: center; height: 320px; 
+            border-color: rgba(0,229,255,0.3); 
+            position: relative; 
+            overflow: hidden;
+            background: rgba(0,229,255,0.02);
+        }
+        .map-center::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at center, rgba(0,229,255,0.15) 0%, transparent 80%);
+            pointer-events: none;
+        }
+        .map-right { grid-area: right; height: 320px; font-size: 0.75rem; }
+        .map-label { font-weight: 700; margin-bottom: 6px; display: block; letter-spacing: 1.5px; text-transform: uppercase; }
+        .map-sub { font-size: 0.65rem; opacity: 0.6; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        @media(max-width: 900px) {
+            .ui-visual-map {
+                grid-template-areas: "top" "center" "left" "right";
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            .map-left, .map-right, .map-center { height: auto; padding: 2rem; }
+        }
+    </style>
+
+    <div class="ui-visual-map">
+        <div class="map-section map-top">
+            <span class="map-label">🔝 BARRA SUPERIOR</span>
+            <span class="map-sub">Navegación · Red · Sistema</span>
+        </div>
+        <div class="map-section map-left">
+            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📋</div>
+            <span class="map-label">PANEL IZQ.</span>
+            <span class="map-sub">Agente · Wallet · Budget</span>
+        </div>
+        <div class="map-section map-center">
+            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">⚡</div>
+            <span class="map-label" style="color: var(--accent);">CENTRO DE CONTROL</span>
+            <span class="map-sub">Misiones · Terminal de logs · Info Token</span>
+        </div>
+        <div class="map-section map-right">
+            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📊</div>
+            <span class="map-label">PANEL DERECHO</span>
+            <span class="map-sub">Vault · x402 · IA HUD · History</span>
+        </div>
+    </div>
 
     <div class="info-grid">
         <div class="info-card">
