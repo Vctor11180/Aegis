@@ -312,29 +312,117 @@
             }
             .map-left, .map-right, .map-center { height: auto; padding: 2.5rem; }
         }
+
+        /* ─── HOTSPOT STYLES ───── */
+        .map-section { cursor: pointer; }
+        .map-section .map-badge {
+            font-size: 0.6rem; font-weight: 700; letter-spacing: 1px;
+            padding: 2px 8px; border-radius: 20px; display: inline-block;
+            margin-bottom: 0.5rem; text-transform: uppercase;
+        }
+        .map-left .map-badge { background: rgba(255,30,0,0.15); color: var(--primary); }
+        .map-center .map-badge { background: rgba(0,229,255,0.15); color: var(--accent); }
+        .map-right .map-badge { background: rgba(140,82,255,0.15); color: var(--violet); }
+        .map-top .map-badge { background: rgba(0,229,255,0.1); color: var(--accent); }
+
+        .map-detail-box {
+            background: var(--bg-2); border: 1px solid var(--border); border-radius: 16px;
+            padding: 1.25rem 1.5rem; margin-top: 1rem; font-size: 0.85rem; line-height: 1.7;
+            color: var(--text-2); transition: all 0.4s ease;
+            border-left: 3px solid var(--accent);
+            opacity: 0; transform: translateY(8px);
+        }
+        .map-detail-box.visible { opacity: 1; transform: translateY(0); }
+        .map-detail-box h4 { font-size: 0.9rem; color: var(--text-1); margin-bottom: 0.5rem; }
+        .map-detail-box ul { padding-left: 1.2rem; }
+        .map-detail-box ul li { margin-bottom: 0.3rem; }
+
+        /* ─── SIMULATION STYLES ─── */
+        .sim-shell {
+            background: var(--bg-1); border: 1px solid var(--border); border-radius: 20px;
+            overflow: hidden; margin: 1.5rem 0;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .sim-topbar {
+            display: flex; align-items: center; gap: 0.75rem;
+            padding: 0.6rem 1rem; background: var(--bg-2);
+            border-bottom: 1px solid var(--border);
+            font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;
+        }
+        .sim-status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+        .sim-body { display: grid; grid-template-columns: 180px 1fr 200px; min-height: 320px; }
+        .sim-panel { border-right: 1px solid var(--border); padding: 1rem; font-size: 0.7rem; }
+        .sim-panel:last-child { border-right: none; border-left: 1px solid var(--border); }
+        .sim-panel-title { font-family: 'JetBrains Mono',monospace; font-size: 0.6rem; letter-spacing: 1px; text-transform: uppercase; color: var(--text-3); margin-bottom: 0.75rem; }
+        .sim-stat { margin-bottom: 0.6rem; }
+        .sim-stat-label { font-size: 0.6rem; color: var(--text-3); text-transform: uppercase; }
+        .sim-stat-value { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; font-weight: 700; color: var(--accent); }
+        .sim-terminal { background: var(--bg-0); font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; line-height: 1.9; padding: 0.75rem; height: 280px; overflow-y: auto; }
+        .sim-terminal .tl-info { color: var(--accent); }
+        .sim-terminal .tl-warn { color: var(--secondary); }
+        .sim-terminal .tl-success { color: var(--green); }
+        .sim-terminal .tl-gold { color: var(--gold); }
+        .sim-terminal .tl-muted { color: var(--text-3); }
+        .sim-result { display: none; padding: 0.75rem; background: var(--bg-0); border-top: 1px solid var(--border); }
+        .sim-result.show { display: block; }
+        .sim-result-badge { display: inline-block; padding: 3px 10px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 700; }
+        .sim-x402 {
+            padding: 0.5rem 0.75rem; border-top: 1px solid var(--border);
+            font-family: 'JetBrains Mono', monospace; font-size: 0.6rem;
+        }
+        .sim-x402-bar { display: flex; gap: 4px; margin-top: 4px; }
+        .sim-x402-seg { flex: 1; height: 4px; border-radius: 2px; background: var(--bg-3); transition: background 0.4s; }
+        .sim-x402-seg.on { background: var(--accent); }
+        .sim-x402-seg.done { background: var(--green); }
+        .btn-sim { 
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            background: linear-gradient(135deg, var(--accent), var(--green));
+            color: var(--bg-0); font-family: 'Outfit'; font-weight: 700; font-size: 0.9rem;
+            border: none; border-radius: 10px; padding: 0.8rem 2rem; cursor: pointer;
+            transition: all 0.3s; margin-bottom: 1rem;
+        }
+        .btn-sim:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,229,255,0.3); }
+        .btn-sim:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .gemini-thinking-anim {
+            display: flex; gap: 4px; align-items: center; height: 14px;
+            padding: 0 4px;
+        }
+        .g-dot-sim { width: 4px; height: 4px; border-radius: 50%; background: var(--gold); animation: gdots 1s infinite; }
+        .g-dot-sim:nth-child(2){ animation-delay: 0.2s; }
+        .g-dot-sim:nth-child(3){ animation-delay: 0.4s; }
+        @keyframes gdots { 0%,100%{transform:scale(1)} 50%{transform:scale(1.8); opacity: 0.6;} }
     </style>
 
     <div class="ui-visual-map">
-        <div class="map-section map-top">
+        <div class="map-section map-top" onclick="showMapDetail('top')">
+            <span class="map-badge" data-t="map_badge_nav">Barra de Navegación</span>
             <span class="map-label">🔝 BARRA SUPERIOR</span>
-            <span class="map-sub">Navegación · Red · Sistema</span>
+            <span class="map-sub" data-t="map_sub_nav">Clic para ver qué hace</span>
         </div>
-        <div class="map-section map-left">
+        <div class="map-section map-left" onclick="showMapDetail('left')">
             <div class="map-icon">📋</div>
-            <span class="map-label">PANEL IZQ.</span>
-            <span class="map-sub">Agente · Wallet · Budget</span>
+            <span class="map-label" data-t="map_left_label">PANEL IZQ.</span>
+            <span class="map-sub" data-t="map_sub_click">Clic para ver qué hace</span>
         </div>
-        <div class="map-section map-center">
+        <div class="map-section map-center" onclick="showMapDetail('center')">
             <div class="map-icon" style="color: var(--accent);">⚡</div>
-            <span class="map-label" style="color: var(--accent);">CENTRO DE CONTROL</span>
-            <span class="map-sub">Misiones · Logs · Info Token</span>
+            <span class="map-label" style="color: var(--accent);" data-t="map_center_label">CENTRO DE CONTROL</span>
+            <span class="map-sub" data-t="map_sub_click2">Clic para ver qué hace</span>
         </div>
-        <div class="map-section map-right">
+        <div class="map-section map-right" onclick="showMapDetail('right')">
             <div class="map-icon">📊</div>
-            <span class="map-label">PANEL DERECHO</span>
-            <span class="map-sub">Vault · x402 · IA HUD</span>
+            <span class="map-label" data-t="map_right_label">PANEL DERECHO</span>
+            <span class="map-sub" data-t="map_sub_click3">Clic para ver qué hace</span>
         </div>
     </div>
+
+    <!-- Detail Popup Box -->
+    <div class="map-detail-box" id="mapDetailBox">
+        <h4 id="mapDetailTitle"></h4>
+        <ul id="mapDetailList"></ul>
+    </div>
+
 
     <div class="info-grid">
         <div class="info-card">
@@ -518,14 +606,101 @@
 </div>
 </div>
 
-<!-- ═══ SLIDE 7 — LAUNCH ═════════════════════════════════ -->
+<!-- ═══ SLIDE 7 — SIMULACIÓN FUNCIONAL ══════════════════════════ -->
 <div class="slide" id="slide-6">
 <div class="slide-inner">
+    <div class="step-badge"><div class="num">7</div> <span data-t="s7_badge">SIMULACIÓN</span></div>
+    <h1 data-t="s7_title">Simula un Ciclo Real de Aegis</h1>
+    <p data-t="s7_p1">Antes de entrar al Mission Control real, experimenta cómo funciona el agente. Haz clic en el botón y observa cada fase del protocolo en tiempo real.</p>
+
+    <button class="btn-sim" id="btnSim" onclick="runSimulation()">&#9654; <span data-t="s7_sim_btn">Iniciar Simulación</span></button>
+
+    <!-- Mini Dashboard Simulation Shell -->
+    <div class="sim-shell">
+        <div class="sim-topbar">
+            <div class="sim-status-dot"></div>
+            <span style="color:var(--accent);font-weight:700;font-size:0.8rem;">AEGIS SENTINEL</span>
+            <span style="color:var(--text-3);">|</span>
+            <span id="simStatus" style="color:var(--text-2);" data-t="s7_status_idle">EN ESPERA — IDLE</span>
+            <span style="margin-left:auto;color:var(--text-3);font-family:'JetBrains Mono';">SIM MODE</span>
+        </div>
+        <div class="sim-body">
+            <!-- Left Panel -->
+            <div class="sim-panel">
+                <div class="sim-panel-title"><span data-t="s7_panel_agent">📋 Agente</span></div>
+                <div class="sim-stat">
+                    <div class="sim-stat-label">AEG-SCOUT</div>
+                    <div class="sim-stat-value" style="font-size:0.65rem;color:var(--text-2);">G6KXW...4RQ</div>
+                </div>
+                <div class="sim-stat">
+                    <div class="sim-stat-label" data-t="s7_budget">Presupuesto</div>
+                    <div class="sim-stat-value" id="simBudget">10,080 XLM</div>
+                </div>
+                <div class="sim-stat">
+                    <div class="sim-stat-label" data-t="s7_cycles">Ciclos</div>
+                    <div class="sim-stat-value" id="simCycles">0</div>
+                </div>
+                <div class="sim-stat">
+                    <div class="sim-stat-label" data-t="s7_audits">Auditorías</div>
+                    <div class="sim-stat-value" id="simAudits">0</div>
+                </div>
+                <div class="sim-x402">
+                    <div style="color:var(--text-3);letter-spacing:1px;font-size:0.55rem;text-transform:uppercase;">x402 Protocol</div>
+                    <div style="color:var(--text-2);margin:2px 0;font-size:0.7rem;" id="simX402State">IDLE</div>
+                    <div class="sim-x402-bar">
+                        <div class="sim-x402-seg" id="xseg1"></div>
+                        <div class="sim-x402-seg" id="xseg2"></div>
+                        <div class="sim-x402-seg" id="xseg3"></div>
+                        <div class="sim-x402-seg" id="xseg4"></div>
+                        <div class="sim-x402-seg" id="xseg5"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Center: Terminal -->
+            <div style="display:flex;flex-direction:column;">
+                <div class="sim-terminal" id="simTerminal">
+                    <div class="tl-muted">&gt; <span data-t="s7_terminal_idle">Sistema listo. Haz clic en "Iniciar Simulación"</span></div>
+                </div>
+                <div class="sim-result" id="simResult">
+                    <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.5rem;">
+                        <span style="font-size:0.6rem;color:var(--text-3);font-family:'JetBrains Mono';" data-t="s7_asset_detected">ACTIVO DETECTADO</span>
+                        <span class="sim-result-badge" id="simRiskBadge"></span>
+                    </div>
+                    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;font-family:'JetBrains Mono';font-size:0.6rem;">
+                        <div><div style="color:var(--text-3);" data-t="s7_asset_id">ID ACTIVO</div><div style="color:var(--text-1);" id="simAssetId">—</div></div>
+                        <div><div style="color:var(--text-3);">HOLDERS</div><div style="color:var(--text-1);" id="simHolders">—</div></div>
+                        <div><div style="color:var(--text-3);" data-t="s7_verified">VERIFICADO</div><div id="simVerified">—</div></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Right Panel -->
+            <div class="sim-panel">
+                <div class="sim-panel-title"><span data-t="s7_panel_vault">📊 Audit Vault</span></div>
+                <div id="simVault" style="font-size:0.6rem;color:var(--text-3);" data-t="s7_vault_empty">Sin auditorías...</div>
+                <div class="sim-panel-title" style="margin-top:0.75rem;"><span data-t="s7_panel_gemini">🧠 Núcleo Gemini</span></div>
+                <div id="simGeminiText" style="font-size:0.65rem;color:var(--text-2);line-height:1.5;" data-t="s7_gemini_idle">En standby...</div>
+                <div id="simGeminiDots" class="gemini-thinking-anim" style="display:none;margin-top:4px;">
+                    <div class="g-dot-sim"></div><div class="g-dot-sim"></div><div class="g-dot-sim"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="highlight-box">
+        <h4 data-t="s7_note_title">💡 Esto es una simulación</h4>
+        <p data-t="s7_note_desc">Los datos mostrados son de prueba. En el Mission Control real, el agente interactuará con la blockchain de Stellar Testnet.</p>
+    </div>
+</div>
+</div>
+
+<!-- ═══ SLIDE 8 — LAUNCH ══════════════════════════════════════ -->
+<div class="slide" id="slide-7">
+<div class="slide-inner">
     <div class="final-block">
-        <div class="step-badge" style="justify-content:center;"><div class="num">✓</div> <span data-t="s7_badge">LISTO</span></div>
-        <h1 data-t="s7_title">¡Estás Listo para Operar!</h1>
-        <p data-t="s7_p1">Ya conoces todas las herramientas de Aegis Sentinel. Es hora de patrullar la frontera de Stellar y proteger el ecosistema blockchain.</p>
-        <a href="/mission-control" class="btn-launch" data-t="s7_btn">🛡️ Iniciar Mission Control</a>
+        <div class="step-badge" style="justify-content:center;"><div class="num">✓</div> <span data-t="s8_badge">LISTO</span></div>
+        <h1 data-t="s8_title">¡Estás Listo para Operar!</h1>
+        <p data-t="s8_p1">Ya conoces todas las herramientas de Aegis Sentinel. ¡Es hora de patrullar la frontera de Stellar y proteger el ecosistema blockchain!</p>
+        <a href="/mission-control" class="btn-launch" data-t="s8_btn">🛡️ Iniciar Mission Control</a>
     </div>
 </div>
 </div>
@@ -580,8 +755,20 @@ es: {
     s6_w1:"Instalar Freighter",s6_w1d:"Extensión de navegador para wallets Stellar",
     s6_w2:"Conectar",s6_w2d:'Haz clic en "CONECTAR FREIGHTER" en el panel izquierdo',
     s6_w3:"Enviar Fondos",s6_w3d:"Usa el campo de envío para transferir XLM al agente",
-    s7_badge:"LISTO",s7_title:"¡Estás Listo para Operar!",s7_p1:"Ya conoces todas las herramientas de Aegis Sentinel. Es hora de patrullar la frontera de Stellar.",
-    s7_btn:"🛡️ Iniciar Mission Control",
+    s7_badge:"SIMULACIÓN",s7_title:"Simula un Ciclo Real de Aegis",
+    s7_p1:"Antes de entrar al Mission Control real, experimenta cómo funciona el agente. Haz clic en el botón y observa cada fase.",
+    s7_sim_btn:"Iniciar Simulación",s7_status_idle:"EN ESPERA — IDLE",
+    s7_panel_agent:"📋 Agente",s7_budget:"Presupuesto",s7_cycles:"Ciclos",s7_audits:"Auditorías",
+    s7_panel_vault:"📊 Audit Vault",s7_panel_gemini:"🧠 Núcleo Gemini",
+    s7_vault_empty:"Sin auditorías...",s7_gemini_idle:"En standby...",
+    s7_terminal_idle:'Sistema listo. Haz clic en "Iniciar Simulación"',
+    s7_asset_detected:"ACTIVO DETECTADO",s7_asset_id:"ID ACTIVO",s7_verified:"VERIFICADO",
+    s7_note_title:"💡 Esto es una simulación",s7_note_desc:"Los datos mostrados son de prueba. En el Mission Control real, el agente interactuará con la blockchain de Stellar Testnet.",
+    s8_badge:"LISTO",s8_title:"¡Estás Listo para Operar!",
+    s8_p1:"Ya conoces todas las herramientas de Aegis Sentinel. ¡Es hora de patrullar la frontera de Stellar!",
+    s8_btn:"🛡️ Iniciar Mission Control",
+    map_badge_nav:"Navegación",map_left_label:"PANEL IZQ.",map_center_label:"CENTRO DE CONTROL",map_right_label:"PANEL DERECHO",
+    map_sub_nav:"Clic para ver qué hace",map_sub_click:"Clic para ver qué hace",map_sub_click2:"Clic para ver qué hace",map_sub_click3:"Clic para ver qué hace",
     btn_prev:"← Anterior",btn_next:"Siguiente →",skip:"Saltar tutorial →"
 },
 en: {
@@ -622,8 +809,20 @@ en: {
     s6_w1:"Install Freighter",s6_w1d:"Browser extension for Stellar wallets",
     s6_w2:"Connect",s6_w2d:'Click "CONNECT FREIGHTER" in the left panel',
     s6_w3:"Send Funds",s6_w3d:"Use the send field to transfer XLM to the agent",
-    s7_badge:"READY",s7_title:"You're Ready to Operate!",s7_p1:"You now know all Aegis Sentinel tools. Time to patrol the Stellar frontier.",
-    s7_btn:"🛡️ Launch Mission Control",
+    s7_badge:"SIMULATION",s7_title:"Simulate a Real Aegis Cycle",
+    s7_p1:"Before entering the real Mission Control, experience how the agent works. Click the button and observe each phase.",
+    s7_sim_btn:"Start Simulation",s7_status_idle:"STANDING BY — IDLE",
+    s7_panel_agent:"📋 Agent",s7_budget:"Budget",s7_cycles:"Cycles",s7_audits:"Audits",
+    s7_panel_vault:"📊 Audit Vault",s7_panel_gemini:"🧠 Gemini Core",
+    s7_vault_empty:"No audits yet...",s7_gemini_idle:"On standby...",
+    s7_terminal_idle:'System ready. Click "Start Simulation"',
+    s7_asset_detected:"ASSET DETECTED",s7_asset_id:"ASSET ID",s7_verified:"VERIFIED",
+    s7_note_title:"💡 This is a simulation",s7_note_desc:"Data shown is for demonstration. In the real Mission Control, the agent interacts with the Stellar Testnet blockchain.",
+    s8_badge:"READY",s8_title:"You're Ready to Operate!",
+    s8_p1:"You now know all Aegis Sentinel tools. Time to patrol the Stellar frontier!",
+    s8_btn:"🛡️ Launch Mission Control",
+    map_badge_nav:"Navigation",map_left_label:"LEFT PANEL",map_center_label:"CONTROL CENTER",map_right_label:"RIGHT PANEL",
+    map_sub_nav:"Click to see what it does",map_sub_click:"Click to see what it does",map_sub_click2:"Click to see what it does",map_sub_click3:"Click to see what it does",
     btn_prev:"← Previous",btn_next:"Next →",skip:"Skip tutorial →"
 },
 pt: {
@@ -664,8 +863,20 @@ pt: {
     s6_w1:"Instalar Freighter",s6_w1d:"Extensão de navegador para wallets Stellar",
     s6_w2:"Conectar",s6_w2d:'Clique em "CONECTAR FREIGHTER" no painel esquerdo',
     s6_w3:"Enviar Fundos",s6_w3d:"Use o campo de envio para transferir XLM ao agente",
-    s7_badge:"PRONTO",s7_title:"Você Está Pronto para Operar!",s7_p1:"Agora você conhece todas as ferramentas do Aegis Sentinel. Hora de patrulhar a fronteira da Stellar.",
-    s7_btn:"🛡️ Iniciar Mission Control",
+    s7_badge:"SIMULAÇÃO",s7_title:"Simule um Ciclo Real do Aegis",
+    s7_p1:"Antes de entrar no Mission Control real, experimente como o agente funciona. Clique no botão e observe cada fase.",
+    s7_sim_btn:"Iniciar Simulação",s7_status_idle:"EM ESPERA — IDLE",
+    s7_panel_agent:"📋 Agente",s7_budget:"Orçamento",s7_cycles:"Ciclos",s7_audits:"Auditorias",
+    s7_panel_vault:"📊 Audit Vault",s7_panel_gemini:"🧠 Núcleo Gemini",
+    s7_vault_empty:"Sem auditorias...",s7_gemini_idle:"Em standby...",
+    s7_terminal_idle:'Sistema pronto. Clique em "Iniciar Simulação"',
+    s7_asset_detected:"ATIVO DETECTADO",s7_asset_id:"ID DO ATIVO",s7_verified:"VERIFICADO",
+    s7_note_title:"💡 Isso é uma simulação",s7_note_desc:"Os dados mostrados são de teste. No Mission Control real, o agente interage com a blockchain da Stellar Testnet.",
+    s8_badge:"PRONTO",s8_title:"Você Está Pronto para Operar!",
+    s8_p1:"Agora você conhece todas as ferramentas do Aegis Sentinel. Hora de patrulhar a fronteira da Stellar!",
+    s8_btn:"🛡️ Iniciar Mission Control",
+    map_badge_nav:"Navegação",map_left_label:"PAINEL ESQ.",map_center_label:"CENTRO DE CONTROLE",map_right_label:"PAINEL DIREITO",
+    map_sub_nav:"Clique para ver o que faz",map_sub_click:"Clique para ver o que faz",map_sub_click2:"Clique para ver o que faz",map_sub_click3:"Clique para ver o que faz",
     btn_prev:"← Anterior",btn_next:"Próximo →",skip:"Pular tutorial →"
 }
 };
@@ -737,12 +948,174 @@ goToSlide(0);
 const themeBtn = document.getElementById('themeToggle');
 let currentTheme = localStorage.getItem('aegis_theme') || 'dark';
 document.documentElement.setAttribute('data-theme', currentTheme);
-
 themeBtn.addEventListener('click', () => {
     currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', currentTheme);
     localStorage.setItem('aegis_theme', currentTheme);
 });
+
+// ── Map Hotspot Details ──────────────────────────────────
+const mapDetails = {
+    es: {
+        top:    { title: '🔝 Barra Superior — Navegación Global', items: ['Logo y marca de Aegis Sentinel','Selector de idioma (ES/EN/PT)','Estado de conexión con la red Stellar','Reloj en tiempo real','Botón de cambio de tema (claro/oscuro)','Botón 📖 para volver al tutorial','Botón ← para ir al inicio'] },
+        left:   { title: '📋 Panel Izquierdo — Identidad del Agente', items: ['Avatar y nombre del agente (AEG-SCOUT)','Presupuesto operativo en XLM actualizado en vivo','Contador de ciclos de patrulla ejecutados','Contador de auditorías de tokens completadas','Botón para conectar tu wallet Freighter','Campo para enviar fondos XLM al agente'] },
+        center: { title: '⚡ Centro de Control — Núcleo Operativo', items: ['⚡ EJECUTAR MISIÓN: inicia un ciclo manual de patrulla','🔄 MODO AUTÓNOMO: lanza patrullas automáticas cada 8s','⚠ ABORTO: para todo de forma instantánea y segura','Tarjeta del token detectado con ID, holders y nivel de riesgo','Terminal de logs en tiempo real con código de colores'] },
+        right:  { title: '📊 Panel Derecho — Inteligencia y Análisis', items: ['Gauge de riesgo SVG animado (0–100)','Gráfico de tendencia histórica de riesgo','Audit Vault: lista completa de tokens auditados','Pipeline del Protocolo x402 (IDLE→RETO→FIRMA→TX→ACCESO)','Núcleo Gemini 1.5: razonamiento del agente en texto','Historial de transacciones x402 on-chain'] }
+    },
+    en: {
+        top:    { title: '🔝 Top Bar — Global Navigation', items: ['Aegis Sentinel logo and brand','Language selector (ES/EN/PT)','Stellar network connection status','Real-time clock','Theme toggle button (light/dark)','📖 button to return to tutorial','← back to landing button'] },
+        left:   { title: '📋 Left Panel — Agent Identity Center', items: ['Agent avatar and name (AEG-SCOUT)','Real-time XLM operating budget','Executed patrol cycles counter','Completed token audits counter','Connect Freighter wallet button','Send XLM funds to agent field'] },
+        center: { title: '⚡ Control Center — Operational Core', items: ['⚡ RUN MISSION: starts a manual patrol cycle','🔄 AUTONOMOUS MODE: launches auto-patrols every 8s','⚠ ABORT: stops everything instantly and safely','Detected token card with ID, holders, and risk level','Real-time color-coded log terminal'] },
+        right:  { title: '📊 Right Panel — Intelligence & Analysis', items: ['Animated SVG risk gauge (0–100)','Historical risk trend chart','Audit Vault: complete list of audited tokens','x402 Protocol pipeline (IDLE→CHALLENGE→SIGN→TX→ACCESS)','Gemini 1.5 Core: agent reasoning in text','x402 on-chain transaction history'] }
+    },
+    pt: {
+        top:    { title: '🔝 Barra Superior — Navegação Global', items: ['Logo e marca do Aegis Sentinel','Seletor de idioma (ES/EN/PT)','Status de conexão com a rede Stellar','Relógio em tempo real','Botão de tema (claro/escuro)','Botão 📖 para voltar ao tutorial','Botão ← para ir ao início'] },
+        left:   { title: '📋 Painel Esquerdo — Identidade do Agente', items: ['Avatar e nome do agente (AEG-SCOUT)','Orçamento operacional em XLM em tempo real','Contador de ciclos de patrulha executados','Contador de auditorias de tokens concluídas','Botão para conectar wallet Freighter','Campo para enviar fundos XLM ao agente'] },
+        center: { title: '⚡ Centro de Controle — Núcleo Operacional', items: ['⚡ EXECUTAR MISSÃO: inicia ciclo manual de patrulha','🔄 MODO AUTÔNOMO: lança patrulhas a cada 8s automaticamente','⚠ ABORTO: para tudo instantaneamente e com segurança','Cartão do token detectado com ID, holders e nível de risco','Terminal de logs em tempo real com código de cores'] },
+        right:  { title: '📊 Painel Direito — Inteligência e Análise', items: ['Gauge de risco SVG animado (0–100)','Gráfico de tendência histórica de risco','Audit Vault: lista completa de tokens auditados','Pipeline Protocolo x402 (IDLE→DESAFIO→ASSINAR→TX→ACESSO)','Núcleo Gemini 1.5: raciocínio do agente em texto','Histórico de transações x402 on-chain'] }
+    }
+};
+
+function showMapDetail(zone) {
+    const box = document.getElementById('mapDetailBox');
+    const data = (mapDetails[currentLang] || mapDetails.es)[zone];
+    if (!data) return;
+    document.getElementById('mapDetailTitle').textContent = data.title;
+    document.getElementById('mapDetailList').innerHTML = data.items.map(i => `<li>${i}</li>`).join('');
+    box.classList.remove('visible');
+    void box.offsetWidth;
+    box.classList.add('visible');
+}
+
+// ── Simulation Logic ─────────────────────────────────────
+let simRunning = false;
+const simTokens = ['USDC:GA5ZS...', 'YUSDC:GBB3...', 'XSGD:GCJ7...', 'SCRT:GFK2...', 'FAKEAI:GZZ9...'];
+const simRisks = [
+    { score: 72, label: 'ALTO — 72/100', bg: 'rgba(255,138,0,0.15)', color: 'var(--secondary)' },
+    { score: 91, label: 'CRÍTICO — 91/100', bg: 'rgba(255,30,0,0.15)', color: 'var(--primary)' },
+    { score: 18, label: 'BAJO — 18/100', bg: 'rgba(0,255,163,0.15)', color: 'var(--green)' },
+    { score: 44, label: 'MEDIO — 44/100', bg: 'rgba(255,204,0,0.15)', color: 'var(--gold)' },
+];
+
+function simLog(text, cls) {
+    const t = document.getElementById('simTerminal');
+    const d = document.createElement('div');
+    if (cls) d.className = cls;
+    d.innerHTML = text;
+    t.appendChild(d);
+    t.scrollTop = t.scrollHeight;
+}
+
+function setSimX402(state) {
+    const labels = { idle:'IDLE', reto:'RETO', firma:'FIRMA', tx:'TX', acceso:'ACCESO' };
+    document.getElementById('simX402State').textContent = labels[state] || state;
+    const counts = { idle:0, reto:1, firma:2, tx:3, acceso:5 };
+    const n = counts[state] || 0;
+    [1,2,3,4,5].forEach(i => {
+        const el = document.getElementById('xseg' + i);
+        el.className = 'sim-x402-seg';
+        if (state === 'acceso') el.classList.add('done');
+        else if (i < n) el.classList.add('done');
+        else if (i === n) el.classList.add('on');
+    });
+}
+
+async function runSimulation() {
+    if (simRunning) return;
+    simRunning = true;
+    const btn = document.getElementById('btnSim');
+    btn.disabled = true;
+    const token = simTokens[Math.floor(Math.random() * simTokens.length)];
+    const risk  = simRisks[Math.floor(Math.random() * simRisks.length)];
+    const holders = (Math.floor(Math.random() * 8000) + 500).toLocaleString();
+    const delay = ms => new Promise(r => setTimeout(r, ms));
+
+    document.getElementById('simTerminal').innerHTML = '';
+    document.getElementById('simResult').classList.remove('show');
+    document.getElementById('simBudget').textContent = '10,080 XLM';
+    document.getElementById('simCycles').textContent = '0';
+    document.getElementById('simAudits').textContent = '0';
+    document.getElementById('simVault').textContent = document.querySelector('[data-t="s7_vault_empty"]')?.textContent || 'Sin auditorías...';
+    document.getElementById('simGeminiText').textContent = document.querySelector('[data-t="s7_gemini_idle"]')?.textContent || 'En standby...';
+    document.getElementById('simGeminiDots').style.display = 'none';
+    setSimX402('idle');
+
+    // Phase 1: Init
+    document.getElementById('simStatus').textContent = '🔵 INICIANDO...';
+    simLog('<span class="tl-info">[SYSTEM] Inicializando protocolos Aegis Sentinel v1.1.0...</span>');
+    await delay(600);
+    simLog('<span class="tl-info">[SYSTEM] Conexión con Stellar Horizon → ESTABLECIDA</span>');
+    await delay(500);
+    simLog('<span class="tl-info">[AGENT] 🔵 AEGIS SOVEREIGN SCOUT — Iniciando Ciclo de Patrulla</span>');
+    await delay(500);
+
+    // Phase 2: Scan
+    document.getElementById('simStatus').textContent = '🔍 ESCANEANDO STELLAR...';
+    simLog('[00:00] 🔍 Escaneando la frontera de Stellar...');
+    await delay(900);
+    simLog(`[00:01] 🎯 Activo detectado: <span class="tl-warn">${token}</span>`);
+    await delay(500);
+    simLog(`[00:01] 📊 Holders: ${holders} &nbsp;|&nbsp; Verificado: Sí`);
+    await delay(400);
+
+    // Phase 3: x402
+    document.getElementById('simStatus').textContent = '⚠️ PROTOCOLO x402...';
+    setSimX402('reto');
+    simLog('<span class="tl-warn">[x402] Reto recibido — servidor solicita 1 XLM por datos premium</span>');
+    await delay(800);
+    setSimX402('firma');
+    simLog('[x402] ✍️ Construyendo y firmando transacción Stellar...');
+    await delay(1000);
+    setSimX402('tx');
+    simLog('[x402] ⏳ TX enviada a Stellar Testnet — aguardando confirmación...');
+    await delay(1200);
+    setSimX402('acceso');
+    simLog('<span class="tl-success">[x402] ✅ Pago confirmado en bloque #4821093. Datos descargados.</span>');
+    await delay(600);
+
+    // Phase 4: Gemini
+    document.getElementById('simStatus').textContent = '🧠 GEMINI ANALIZANDO...';
+    document.getElementById('simGeminiDots').style.display = 'flex';
+    document.getElementById('simGeminiText').textContent = 'Analizando vectores de riesgo...';
+    simLog('<span class="tl-gold">[GEMINI] 🧠 Activando núcleo Gemini 1.5 — Iniciando análisis profundo...</span>');
+    await delay(800);
+    simLog('[GEMINI] Evaluando: distribución de holders, patrón de contrato, historial de txs...');
+    await delay(1400);
+    simLog('<span class="tl-warn">[GEMINI] 🎯 PENSAMIENTO DEL AGENTE AEGIS</span>');
+    simLog('[GEMINI] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    await delay(300);
+    simLog(`[GEMINI] Risk Score: <span class="tl-warn">${risk.score}/100</span>`);
+    simLog(`[GEMINI] Nivel: <span class="tl-warn">${risk.label}</span>`);
+    document.getElementById('simGeminiDots').style.display = 'none';
+    document.getElementById('simGeminiText').textContent = `Análisis completado. Score: ${risk.score}/100`;
+    await delay(600);
+
+    // Phase 5: Result
+    document.getElementById('simStatus').textContent = '✅ CICLO COMPLETADO';
+    simLog('<span class="tl-success">[DECISION] → IGNORAR — Score no supera umbral crítico. Agregando al Vault.</span>');
+    simLog('[00:07] 🏁 Ciclo completado — Presupuesto restante: 10,079.00 XLM');
+
+    document.getElementById('simCycles').textContent = '1';
+    document.getElementById('simAudits').textContent = '1';
+    document.getElementById('simBudget').textContent = '10,079 XLM';
+
+    const badge = document.getElementById('simRiskBadge');
+    badge.textContent = risk.label;
+    badge.style.background = risk.bg;
+    badge.style.color = risk.color;
+    document.getElementById('simAssetId').textContent  = token.split(':')[0];
+    document.getElementById('simHolders').textContent  = holders;
+    const verEl = document.getElementById('simVerified');
+    verEl.style.color = 'var(--green)';
+    verEl.textContent = '✓ Sí';
+    document.getElementById('simResult').classList.add('show');
+    document.getElementById('simVault').innerHTML =
+        `<div style="padding:4px 0;border-bottom:1px solid var(--border);"><span style="color:${risk.color};font-weight:700;">${risk.label.split('—')[0].trim()}</span> ${token.split(':')[0]} — ${new Date().toLocaleTimeString()}</div>`;
+
+    setSimX402('idle');
+    btn.disabled = false;
+    simRunning = false;
+}
 </script>
 </body>
 </html>
