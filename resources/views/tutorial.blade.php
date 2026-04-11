@@ -222,52 +222,87 @@
             grid-template-columns: 240px 1fr 280px;
             grid-template-rows: auto 1fr;
             gap: 16px;
-            background: rgba(15, 15, 31, 0.4);
+            background: var(--bg-1);
             border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 16px;
+            border-radius: 24px;
+            padding: 20px;
             margin: 2.5rem 0;
             font-family: 'JetBrains Mono', monospace;
-            box-shadow: 0 40px 80px rgba(0,0,0,0.6);
-            backdrop-filter: blur(10px);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+            background-image: 
+                linear-gradient(var(--border) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 20px 20px;
         }
+        [data-theme="dark"] .ui-visual-map { box-shadow: 0 40px 100px rgba(0,0,0,0.6); }
+
         .map-section {
-            background: rgba(255,255,255,0.02);
+            background: var(--bg-2);
             border: 1px solid var(--border);
-            border-radius: 12px;
+            border-radius: 16px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 1.5rem;
+            padding: 2rem;
             text-align: center;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            color: var(--text-2);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
         }
-        .map-section:hover {
-            background: rgba(255,255,255,0.05);
-            border-color: var(--accent);
-            transform: scale(1.03);
-            color: var(--text-1);
-            box-shadow: 0 0 20px rgba(0,229,255,0.1);
+        
+        /* Section Specific Styles */
+        .map-top { 
+            grid-area: top; height: 60px; color: var(--accent); 
+            background: linear-gradient(135deg, var(--bg-2), var(--bg-3));
         }
-        .map-top { grid-area: top; height: 50px; font-size: 0.75rem; color: var(--accent); }
-        .map-left { grid-area: left; height: 320px; font-size: 0.75rem; }
+        .map-left { 
+            grid-area: left; height: 340px; 
+            border-left: 4px solid var(--primary);
+        }
         .map-center { 
-            grid-area: center; height: 320px; 
-            border-color: rgba(0,229,255,0.3); 
-            position: relative; 
-            overflow: hidden;
-            background: rgba(0,229,255,0.02);
+            grid-area: center; height: 340px; 
+            border: 2px solid var(--accent);
+            background: linear-gradient(to bottom, var(--bg-2), var(--bg-3));
+            box-shadow: inset 0 0 30px var(--glow);
         }
-        .map-center::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(circle at center, rgba(0,229,255,0.15) 0%, transparent 80%);
-            pointer-events: none;
+        .map-right { 
+            grid-area: right; height: 340px; 
+            border-right: 4px solid var(--violet);
         }
-        .map-right { grid-area: right; height: 320px; font-size: 0.75rem; }
-        .map-label { font-weight: 700; margin-bottom: 6px; display: block; letter-spacing: 1.5px; text-transform: uppercase; }
-        .map-sub { font-size: 0.65rem; opacity: 0.6; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .map-section:hover {
+            transform: translateY(-5px) scale(1.01);
+            border-color: var(--accent);
+            z-index: 10;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        [data-theme="dark"] .map-section:hover { box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+
+        .map-label { 
+            font-weight: 800; 
+            margin-bottom: 8px; 
+            display: block; 
+            letter-spacing: 2px; 
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            color: var(--text-1);
+        }
+        .map-sub { 
+            font-size: 0.65rem; 
+            color: var(--text-3);
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+        [data-theme="light"] .map-sub { color: var(--text-2); }
+
+        .map-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+        }
 
         @media(max-width: 900px) {
             .ui-visual-map {
@@ -275,7 +310,7 @@
                 grid-template-columns: 1fr;
                 gap: 12px;
             }
-            .map-left, .map-right, .map-center { height: auto; padding: 2rem; }
+            .map-left, .map-right, .map-center { height: auto; padding: 2.5rem; }
         }
     </style>
 
@@ -285,19 +320,19 @@
             <span class="map-sub">Navegación · Red · Sistema</span>
         </div>
         <div class="map-section map-left">
-            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📋</div>
+            <div class="map-icon">📋</div>
             <span class="map-label">PANEL IZQ.</span>
             <span class="map-sub">Agente · Wallet · Budget</span>
         </div>
         <div class="map-section map-center">
-            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">⚡</div>
+            <div class="map-icon" style="color: var(--accent);">⚡</div>
             <span class="map-label" style="color: var(--accent);">CENTRO DE CONTROL</span>
-            <span class="map-sub">Misiones · Terminal de logs · Info Token</span>
+            <span class="map-sub">Misiones · Logs · Info Token</span>
         </div>
         <div class="map-section map-right">
-            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📊</div>
+            <div class="map-icon">📊</div>
             <span class="map-label">PANEL DERECHO</span>
-            <span class="map-sub">Vault · x402 · IA HUD · History</span>
+            <span class="map-sub">Vault · x402 · IA HUD</span>
         </div>
     </div>
 
