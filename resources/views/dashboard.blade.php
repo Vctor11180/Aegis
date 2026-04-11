@@ -98,15 +98,17 @@
             text-decoration: none;
         }
 
-        .brand-icon {
+        .brand-logo-wrap {
             width: 32px; height: 32px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            clip-path: polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+            position: relative;
             display: flex; align-items: center; justify-content: center;
-            font-weight: 800; color: white; font-size: 1rem;
+        }
+        .phoenix-svg {
+            width: 100%; height: 100%;
+            filter: drop-shadow(0 0 8px rgba(246,21,0,0.4));
         }
 
-        .brand-name { font-weight: 700; font-size: 1rem; letter-spacing: 1px; color: var(--text-1); }
+        .brand-name { font-weight: 700; font-size: 1rem; letter-spacing: 1px; color: var(--text-1); font-family: 'Outfit', sans-serif; }
         .brand-name span { color: var(--accent); font-weight: 300; }
 
         .topbar-center {
@@ -654,7 +656,21 @@
     <!-- ═══ TOPBAR ═══════════════════════════════════════════════ -->
     <header class="topbar">
         <a href="/" class="topbar-brand">
-            <div class="brand-icon">A</div>
+            <div class="brand-logo-wrap">
+                <svg class="phoenix-svg" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 5 L35 30 H5 L20 5 Z" fill="url(#pgrad)" opacity="0.15"/>
+                    <path d="M20 10 L12 28 M20 10 L28 28 M16 22 H24" stroke="url(#pgrad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M10 20 Q5 15 8 10 Q12 8 15 12" stroke="url(#pgrad)" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+                    <path d="M30 20 Q35 15 32 10 Q28 8 25 12" stroke="url(#pgrad)" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+                    <circle cx="20" cy="10" r="1.5" fill="#00f2ff" filter="blur(1px)"/>
+                    <defs>
+                        <linearGradient id="pgrad" x1="5" y1="5" x2="35" y2="35">
+                            <stop stop-color="#f61500"/>
+                            <stop offset="1" stop-color="#ff750f"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
             <span class="brand-name">AEGIS <span>SENTINEL</span></span>
         </a>
 

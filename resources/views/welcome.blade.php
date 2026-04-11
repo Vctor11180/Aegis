@@ -73,52 +73,83 @@
         section, footer, nav { position: relative; z-index: 1; }
 
         /* ── NAV ─────────────────────────────────────────── */
-        nav {
+        .topbar {
             position: fixed;
-            top: 0; width: 100%;
-            padding: 0 6%;
-            height: 62px;
+            top: 0; left: 0; right: 0;
+            height: 64px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            backdrop-filter: blur(20px);
             background: var(--bg-1);
-            opacity: 0.95;
+            backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
-            z-index: 100;
-            transition: background 0.3s;
+            padding: 0 1.5rem;
+            z-index: 1000;
+            transition: all 0.3s ease;
         }
 
-        .nav-logo {
-            font-weight: 800;
-            font-size: 1.1rem;
-            letter-spacing: 2px;
-            color: var(--text-1);
-            text-decoration: none;
+        .topbar-brand {
             display: flex;
             align-items: center;
-            gap: 0.6rem;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--text-1);
         }
-        .nav-logo .logo-gem { width: 26px; height: 26px; background: linear-gradient(135deg,var(--primary),var(--secondary)); clip-path: polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%); }
-        .nav-logo span { color: var(--accent); font-weight: 300; }
 
-        .nav-links { display: flex; align-items: center; gap: 2rem; }
-        .nav-links a { font-size: 0.85rem; color: var(--text-2); text-decoration: none; transition: color 0.2s; }
-        .nav-links a:hover { color: var(--text-1); }
+        /* ── PHOENIX LOGO ── */
+        .brand-logo-wrap {
+            width: 32px; height: 32px;
+            position: relative;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .phoenix-svg {
+            width: 100%; height: 100%;
+            filter: drop-shadow(0 0 8px rgba(246,21,0,0.4));
+        }
 
-        .btn-nav {
-            background: linear-gradient(90deg,var(--primary),var(--secondary));
-            color: #fff;
-            padding: 0.5rem 1.5rem;
-            border-radius: 50px;
+        .brand-name { font-weight: 700; font-size: 1rem; letter-spacing: 1px; color: var(--text-1); font-family: 'Outfit', sans-serif; }
+        .brand-name span { color: var(--accent); font-weight: 300; }
+
+        .topbar-center {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+        .topbar-center a {
             font-size: 0.8rem;
-            font-weight: 600;
-            letter-spacing: 1px;
+            color: var(--text-2);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .topbar-center a:hover { color: var(--accent); }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .btn-nav-mc {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            padding: 0.5rem 1.25rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
             text-decoration: none;
             text-transform: uppercase;
-            transition: all 0.2s;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(246,21,0,0.2);
         }
-        .btn-nav:hover { opacity: 0.85; transform: translateY(-1px); }
+        .btn-nav-mc:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(246,21,0,0.4); }
+
+        @media (max-width: 900px) {
+            .topbar-center { display: none; }
+        }
 
         .top-btn {
             background: var(--bg-3);
@@ -517,28 +548,45 @@
 <!-- Radar canvas background -->
 <canvas id="bgCanvas"></canvas>
 
-<!-- ═══ NAV ═══════════════════════════════════════════════════════ -->
-<nav>
-    <a href="/" class="nav-logo">
-        <div class="logo-gem"></div>
-        AEGIS <span>SENTINEL</span>
+<!-- ═══ TOPBAR ═══════════════════════════════════════════════ -->
+<header class="topbar">
+    <a href="/" class="topbar-brand">
+        <div class="brand-logo-wrap">
+            <svg class="phoenix-svg" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 5 L35 30 H5 L20 5 Z" fill="url(#pgrad)" opacity="0.15"/>
+                <path d="M20 10 L12 28 M20 10 L28 28 M16 22 H24" stroke="url(#pgrad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M10 20 Q5 15 8 10 Q12 8 15 12" stroke="url(#pgrad)" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+                <path d="M30 20 Q35 15 32 10 Q28 8 25 12" stroke="url(#pgrad)" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+                <circle cx="20" cy="10" r="1.5" fill="#00f2ff" filter="blur(1px)"/>
+                <defs>
+                    <linearGradient id="pgrad" x1="5" y1="5" x2="35" y2="35">
+                        <stop stop-color="#f61500"/>
+                        <stop offset="1" stop-color="#ff750f"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+        </div>
+        <span class="brand-name">AEGIS <span>SENTINEL</span></span>
     </a>
-    <div class="nav-links">
-    <div class="nav-links">
+
+    <div class="topbar-center">
         <a href="#pilares" data-t="nav_tech">Tecnología</a>
         <a href="#demo" data-t="nav_demo">Demo</a>
         <a href="#funciones" data-t="nav_features">Funciones</a>
         <a href="/tutorial" data-t="nav_howto">Cómo Funciona</a>
-        <div style="width:1px; height:20px; background:var(--border); margin:0 4px;"></div>
+    </div>
+
+    <div class="topbar-right">
         <select class="lang-select" id="langSelect">
             <option value="es">ES</option>
             <option value="en">EN</option>
             <option value="pt">PT</option>
         </select>
         <button class="top-btn" id="themeToggle" title="Toggle Theme">🌓</button>
-        <a href="/mission-control" class="btn-nav" data-t="nav_dashboard">Mission Control</a>
+        <div style="width:1px; height:20px; background:var(--border); margin:0 4px;"></div>
+        <a href="/mission-control" class="btn-nav-mc" data-t="nav_dashboard">Mission Control</a>
     </div>
-</nav>
+</header>
 
 <!-- ═══ HERO ══════════════════════════════════════════════════════ -->
 <section class="hero" id="hero">
