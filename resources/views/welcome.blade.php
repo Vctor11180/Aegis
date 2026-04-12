@@ -745,7 +745,7 @@
         </div>
         <div class="pillar-visual reveal from-right">
             <div class="pillar-img-wrap">
-                <img src="{{ asset('aegis_tech_pillars_brain_1775738788077.png') }}" alt="Gemini AI Neural Core">
+                <img src="{{ asset('images/aegis_tech_pillars_brain_1775738788077.png') }}" alt="Gemini AI Neural Core">
             </div>
         </div>
     </div>
@@ -766,7 +766,7 @@
         </div>
         <div class="pillar-visual reveal from-left">
             <div class="pillar-img-wrap">
-                <img src="{{ asset('aegis_tech_pillars_shield_1775738821464.png') }}" alt="Aegis Security Shield">
+                <img src="{{ asset('images/aegis_tech_pillars_shield_1775738821464.png') }}" alt="Aegis Security Shield">
             </div>
         </div>
     </div>
@@ -787,7 +787,7 @@
         </div>
         <div class="pillar-visual reveal from-right">
             <div class="pillar-img-wrap">
-                <img src="{{ asset('aegis_tech_pillars_protocol_1775738855327.png') }}" alt="x402 Protocol Economic Flow">
+                <img src="{{ asset('images/aegis_tech_pillars_protocol_1775738855327.png') }}" alt="x402 Protocol Economic Flow">
             </div>
         </div>
     </div>
