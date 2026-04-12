@@ -37,6 +37,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Auto-migrate if on Vercel and using memory/temp database
+        if (env('VERCEL') || env('VERCEL_ENV') || isset($_SERVER['VERCEL_URL'])) {
+            try {
+                \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+            } catch (\Exception $e) {
+                // Silently fail if migration is not possible, to avoid crashing the whole app
+                \Illuminate\Support\Facades\Log::error("Vercel Auto-migration failed: " . $e->getMessage());
+            }
+        }
     }
 }
