@@ -584,7 +584,31 @@
             box-shadow: 0 0 20px rgba(111,168,255,0.1);
         }
 
-        /* Audit Vault List */
+        /* Pagination Controls */
+        .slab-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+        .paginator {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .pag-btn {
+            background: var(--bg-3);
+            border: 1px solid var(--border);
+            color: var(--text-2);
+            width: 22px; height: 22px;
+            border-radius: 4px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 0.6rem; transition: all 0.2s;
+        }
+        .pag-btn:hover:not(:disabled) { background: var(--bg-1); color: var(--accent); border-color: var(--accent); }
+        .pag-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+        .pag-info { font-size: 0.6rem; color: var(--text-3); font-family: 'JetBrains Mono', monospace; }
+
         .vault-item {
             display: flex;
             align-items: center;
@@ -873,8 +897,15 @@
 
         <!-- Audit Vault (History) -->
         <div class="tx-feed" style="flex: 1; display: flex; flex-direction: column;">
-            <div class="slab" data-t="vault_title">Audit Vault (Historial)</div>
-            <div id="vaultList" style="overflow-y: auto; flex: 1; min-height: 120px;">
+            <div class="slab-header">
+                <div class="slab" style="margin:0;" data-t="vault_title">Audit Vault (Historial)</div>
+                <div class="paginator" id="vaultPag">
+                    <button class="pag-btn" id="vaultPrev" onclick="changeVaultPage(-1)">◀</button>
+                    <span class="pag-info" id="vaultPageInfo">1/1</span>
+                    <button class="pag-btn" id="vaultNext" onclick="changeVaultPage(1)">▶</button>
+                </div>
+            </div>
+            <div id="vaultList" style="overflow-y: hidden; flex: 1; min-height: 120px;">
                 <div class="tx-empty" data-t="loading_db">Iniciando base de datos...</div>
             </div>
         </div>
@@ -917,7 +948,14 @@
 
         <!-- TX History -->
         <div class="tx-feed" id="txHistorySection">
-            <div class="slab" data-t="tx_title">Historial x402 On-Chain</div>
+            <div class="slab-header">
+                <div class="slab" style="margin:0;" data-t="tx_title">Historial x402 On-Chain</div>
+                <div class="paginator" id="txPag">
+                    <button class="pag-btn" id="txPrev" onclick="changeTxPage(-1)">◀</button>
+                    <span class="pag-info" id="txPageInfo">1/1</span>
+                    <button class="pag-btn" id="txNext" onclick="changeTxPage(1)">▶</button>
+                </div>
+            </div>
             <div id="txList">
                 <div class="tx-empty" data-t="tx_empty">Sin transacciones en esta sesión</div>
             </div>
@@ -942,6 +980,9 @@ let xlmSpent     = 0;
 let initialBal   = null;
 let txHistory    = JSON.parse(localStorage.getItem('aegis_tx_history') || '[]');
 let riskHistory  = []; // For the trend chart
+let vaultData    = [];
+let vaultPage    = 0;
+let txPage       = 0;
 
 const i18n = {
     es: {
@@ -1149,26 +1190,60 @@ function addLine(text, type = '') {
 async function fetchVault() {
     try {
         const res = await fetch('/api/agent/history');
-        const audits = await res.json();
-        const list = document.getElementById('vaultList');
-        if (audits.length === 0) {
-            list.innerHTML = `<div class="tx-empty">${t('vault_empty')}</div>`;
-            return;
+        vaultData = await res.json();
+        // Always reset to first page when fetching new data from a mission
+        if (isRunning) vaultPage = 0;
+        renderVault();
+        if (vaultData.length > 0) {
+            riskHistory = vaultData.slice(0, 15).reverse().map(a => a.risk_score);
+            updateTrendChart();
         }
-        riskHistory = audits.slice(0, 15).reverse().map(a => a.risk_score);
-        updateTrendChart();
-        list.innerHTML = audits.map(a => {
-            const bg  = a.risk_score >= 75 ? '#f61500' : (a.risk_score >= 50 ? '#ff750f' : '#00ffa3');
-            return `
-                <div class="vault-item">
-                    <div class="vault-score" style="background:${bg}">${a.risk_score}</div>
-                    <div class="vault-symbol">${a.token_symbol}</div>
-                    <div class="vault-type">${a.threat_level}</div>
-                    ${a.is_paid ? '<div class="vault-paid">⚡ x402</div>' : ''}
-                </div>
-            `;
-        }).join('');
     } catch (e) { console.error("Vault Error:", e); }
+}
+
+function renderVault() {
+    const list = document.getElementById('vaultList');
+    if (!vaultData || vaultData.length === 0) {
+        list.innerHTML = `<div class="tx-empty">${t('vault_empty')}</div>`;
+        updatePagUI('vault', 0, 0);
+        return;
+    }
+
+    const totalPages = Math.ceil(vaultData.length / 5);
+    if (vaultPage >= totalPages) vaultPage = Math.max(0, totalPages - 1);
+
+    const start = vaultPage * 5;
+    const slice = vaultData.slice(start, start + 5);
+
+    list.innerHTML = slice.map(a => {
+        const bg = a.risk_score >= 75 ? '#f61500' : (a.risk_score >= 50 ? '#ff750f' : '#00ffa3');
+        return `
+            <div class="vault-item">
+                <div class="vault-score" style="background:${bg}">${a.risk_score}</div>
+                <div class="vault-symbol">${a.token_symbol}</div>
+                <div class="vault-type">${a.threat_level}</div>
+                ${a.is_paid ? '<div class="vault-paid">⚡ x402</div>' : ''}
+            </div>
+        `;
+    }).join('');
+    updatePagUI('vault', vaultPage + 1, totalPages);
+}
+
+function changeVaultPage(delta) {
+    const totalPages = Math.ceil(vaultData.length / 5);
+    vaultPage += delta;
+    if (vaultPage < 0) vaultPage = 0;
+    if (vaultPage >= totalPages) vaultPage = totalPages - 1;
+    renderVault();
+}
+
+function updatePagUI(section, current, total) {
+    const info = document.getElementById(`${section}PageInfo`);
+    const prev = document.getElementById(`${section}Prev`);
+    const next = document.getElementById(`${section}Next`);
+    if (info) info.textContent = total > 0 ? `${current}/${total}` : '0/0';
+    if (prev) prev.disabled = (current <= 1);
+    if (next) next.disabled = (current >= total);
 }
 
 function updateTrendChart() {
@@ -1278,14 +1353,27 @@ function showTokenCard(meta, riskScore, threatLevel) {
 function addTxToHistory(txMeta) {
     if (!txMeta) return;
     txHistory.unshift(txMeta);
-    if (txHistory.length > 5) txHistory.pop();
+    // Increased history limit for pagination support (e.g. 50 items)
+    if (txHistory.length > 50) txHistory.pop();
     localStorage.setItem('aegis_tx_history', JSON.stringify(txHistory));
+    txPage = 0; // Reset to page 1 on new transaction
     renderTxHistory();
 }
 function renderTxHistory() {
     const list = document.getElementById('txList');
-    if (txHistory.length === 0) { list.innerHTML = `<div class="tx-empty">${t('tx_empty')}</div>`; return; }
-    list.innerHTML = txHistory.map(tx => `
+    if (txHistory.length === 0) {
+        list.innerHTML = `<div class="tx-empty">${t('tx_empty')}</div>`;
+        updatePagUI('tx', 0, 0);
+        return;
+    }
+
+    const totalPages = Math.ceil(txHistory.length / 5);
+    if (txPage >= totalPages) txPage = Math.max(0, totalPages - 1);
+
+    const start = txPage * 5;
+    const slice = txHistory.slice(start, start + 5);
+
+    list.innerHTML = slice.map(tx => `
         <div class="tx-item">
             <div>
                 <a href="${tx.explorer}" target="_blank" class="tx-hash">${tx.hash_short}</a>
@@ -1294,7 +1382,19 @@ function renderTxHistory() {
             <div class="tx-amt">-${parseFloat(tx.amount).toFixed(1)} XLM</div>
         </div>
     `).join('');
+    updatePagUI('tx', txPage + 1, totalPages);
 }
+
+function changeTxPage(delta) {
+    const totalPages = Math.ceil(txHistory.length / 5);
+    txPage += delta;
+    if (txPage < 0) txPage = 0;
+    if (txPage >= totalPages) txPage = totalPages - 1;
+    renderTxHistory();
+}
+
+window.changeVaultPage = changeVaultPage;
+window.changeTxPage = changeTxPage;
 
 // ── Balance ───────────────────────────────────────────────────────
 async function loadAgentBalance() {
