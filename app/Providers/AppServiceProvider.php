@@ -12,7 +12,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         // Vercel read-only filesystem fix
-        if (env('VERCEL')) {
+        if (env('VERCEL') || env('VERCEL_ENV') || isset($_SERVER['VERCEL_URL'])) {
             $storagePath = '/tmp/storage';
             $this->app->useStoragePath($storagePath);
 
