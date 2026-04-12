@@ -22,11 +22,11 @@ Route::get('/mission-control', function () {
 });
 
 // Ruta para ejecutar la misión del agente
-Route::get('/api/agent/run', [ScoutController::class, 'run']);
-Route::get('/api/agent/history', [ScoutController::class, 'history']);
+Route::get('/scout-api/agent/run', [ScoutController::class, 'run']);
+Route::get('/scout-api/agent/history', [ScoutController::class, 'history']);
 
 // Endpoint Premium Protegido por x402
-Route::get('/api/premium/audit/{token_id}', function ($token_id) {
+Route::get('/scout-api/premium/audit/{token_id}', function ($token_id) {
     return response()->json([
         'token_id' => $token_id,
         'security_score' => rand(85, 99) . "/100",

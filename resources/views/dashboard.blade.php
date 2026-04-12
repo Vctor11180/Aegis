@@ -1189,7 +1189,7 @@ function addLine(text, type = '') {
 // ── Audit Vault & Trend Chart ──────────────────────────────────────
 async function fetchVault() {
     try {
-        const res = await fetch('/api/agent/history');
+        const res = await fetch('/scout-api/agent/history');
         vaultData = await res.json();
         // Always reset to first page when fetching new data from a mission
         if (isRunning) vaultPage = 0;
@@ -1428,7 +1428,7 @@ async function loadGovBalance(pk) {
 async function runMission() {
     const govAddr = document.getElementById('govAddr').textContent || '';
     try {
-        const res  = await fetch(`/api/agent/run?governor=${govAddr}&lang=${currentLang}`);
+        const res  = await fetch(`/scout-api/agent/run?governor=${govAddr}&lang=${currentLang}`);
         const data = await res.json();
         if (data.status === 'error') { addLine(`[ERROR] ${data.message}`, 't-warn'); return false; }
         data.logs.forEach(log => addLine(log.text, log.type || ''));
